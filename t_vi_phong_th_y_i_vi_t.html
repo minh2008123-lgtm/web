@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tử Vi & Phong Thủy Đại Việt - Luận Giải Lá Số & Vận Mệnh</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Philosopher:ital,wght@0,400;0,700;1,400&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            DEFAULT: '#d4af37',
+                            light: '#f3e5ab',
+                            dark: '#aa7c11',
+                            glow: '#ffe57f'
+                        },
+                        oriental: {
+                            red: '#7a0c0c',
+                            darkred: '#4a0000',
+                            crimson: '#b31212',
+                            purple: '#1a0933',
+                            darkbg: '#0f051d',
+                            cardbg: '#180a2a',
+                            border: '#3d1b5c'
+                        },
+                        element: {
+                            kim: '#e2e8f0',   // Kim - Trắng/Bạc
+                            moc: '#22c55e',   // Mộc - Xanh lá
+                            thuy: '#3b82f6',  // Thủy - Xanh dương
+                            hoa: '#ef4444',   // Hỏa - Đỏ
+                            tho: '#eab308'    // Thổ - Vàng đất
+                        }
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        philosopher: ['Philosopher', 'sans-serif'],
+                        vietnam: ['Be Vietnam Pro', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Oriental Aesthetics */
+        body {
+            background-color: #0f051d;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(122, 12, 12, 0.35) 0%, transparent 70%),
+                radial-gradient(circle at 100% 100%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+            color: #f1f5f9;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Gold border and text effects */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #ffe57f 0%, #d4af37 50%, #aa7c11 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border {
+            border: 1px solid transparent;
+            border-image: linear-gradient(to bottom right, #d4af37, #4a0000, #aa7c11) 1;
+        }
+
+        .gold-box-shadow {
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Chart 4x4 Grid styling */
+        .tuvi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, minmax(130px, auto));
+            gap: 4px;
+            background-color: #3d1b5c;
+            padding: 4px;
+            border-radius: 8px;
+            border: 2px solid #d4af37;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f051d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a0000;
+            border-radius: 4px;
+            border: 1px solid #d4af37;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #7a0c0c;
+        }
+
+        /* Animations */
+        @keyframes coinFlip {
+            0% { transform: rotateY(0deg) scale(1); }
+            50% { transform: rotateY(900deg) scale(1.3); }
+            100% { transform: rotateY(1800deg) scale(1); }
+        }
+
+        .animate-coin {
+            animation: coinFlip 1.2s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+
+        @keyframes shakeStick {
+            0%, 100% { transform: rotate(0deg); }
+            20% { transform: rotate(-15deg); }
+            40% { transform: rotate(15deg); }
+            60% { transform: rotate(-10deg); }
+            80% { transform: rotate(10deg); }
+        }
+
+        .animate-shake {
+            animation: shakeStick 0.8s ease-in-out infinite;
+        }
+
+        /* Print styles for Lá số */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .tuvi-grid {
+                border: 2px solid black !important;
+                background-color: #ddd !important;
+            }
+            .tuvi-cell {
+                background-color: white !important;
+                color: black !important;
+                border: 1px solid black !important;
+            }
+            .gold-gradient-text {
+                -webkit-text-fill-color: black !important;
+                color: black !important;
+            }
+        }
+    </style>
+</head>
+<body class="selection:bg-oriental-red selection:text-gold-light antialiased">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="no-print border-b border-oriental-border bg-oriental-purple/90 backdrop-blur-md sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('laso')">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-oriental-crimson to-yellow-600 flex items-center justify-center border-2 border-gold shadow-md">
+                        <i class="fa-solid font-bold text-2xl text-gold-glow fa-yin-yang"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-cinzel text-xl sm:text-2xl font-bold gold-gradient-text tracking-wider">ĐẠI VIỆT TỬ VI</h1>
+                        <p class="text-xs text-amber-200/70 font-philosopher">Khai Mở Vận Mệnh - Định Hướng Tương Lai</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs (Desktop) -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2 font-medium text-sm">
+                    <button onclick="switchTab('laso')" id="nav-laso" class="tab-btn active px-3 py-2 rounded-lg transition-all flex items-center space-x-2 bg-oriental-red text-gold border border-gold/40">
+                        <i class="fa-solid fa-scroll"></i> <span>Lập Lá Số Tử Vi</span>
+                    </button>
+                    <button onclick="switchTab('luangiai')" id="nav-luangiai" class="tab-btn px-3 py-2 rounded-lg transition-all flex items-center space-x-2 hover:text-gold hover:bg-oriental-cardbg text-gray-300">
+                        <i class="fa-solid fa-book-open text-amber-400"></i> <span>Luận Giải</span>
+                    </button>
+                    <button onclick="switchTab('boique')" id="nav-boique" class="tab-btn px-3 py-2 rounded-lg transition-all flex items-center space-x-2 hover:text-gold hover:bg-oriental-cardbg text-gray-300">
+                        <i class="fa-solid fa-coins text-yellow-500"></i> <span>Bói Quẻ & Phong Thủy</span>
+                    </button>
+                    <button onclick="switchTab('congiap')" id="nav-congiap" class="tab-btn px-3 py-2 rounded-lg transition-all flex items-center space-x-2 hover:text-gold hover:bg-oriental-cardbg text-gray-300">
+                        <i class="fa-solid fa-dragon text-red-400"></i> <span>12 Con Giáp & Cung</span>
+                    </button>
+                    <button onclick="switchTab('tinhduyen')" id="nav-tinhduyen" class="tab-btn px-3 py-2 rounded-lg transition-all flex items-center space-x-2 hover:text-gold hover:bg-oriental-cardbg text-gray-300">
+                        <i class="fa-solid fa-heart text-pink-500"></i> <span>Bói Tình Duyên</span>
+                    </button>
+                    <button onclick="switchTab('lichamduong')" id="nav-lichamduong" class="tab-btn px-3 py-2 rounded-lg transition-all flex items-center space-x-2 hover:text-gold hover:bg-oriental-cardbg text-gray-300">
+                        <i class="fa-regular fa-calendar-days text-emerald-400"></i> <span>Lịch Âm Dương</span>
+                    </button>
+                </nav>
+
+                <!-- Quick Action Buttons -->
+                <div class="hidden sm:flex items-center space-x-2">
+                    <button onclick="quickRandomFortune()" class="px-3 py-1.5 text-xs font-semibold rounded-full bg-gradient-to-r from-amber-600 to-yellow-500 text-black hover:brightness-110 shadow-lg flex items-center space-x-1">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Quẻ Hôm Nay</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Submenu -->
+        <div class="md:hidden flex overflow-x-auto py-2 px-3 space-x-2 border-t border-oriental-border/50 bg-oriental-darkbg text-xs">
+            <button onclick="switchTab('laso')" class="mobile-tab-btn flex-shrink-0 px-3 py-1.5 rounded-full bg-oriental-red text-gold border border-gold/40">Lá Số</button>
+            <button onclick="switchTab('luangiai')" class="mobile-tab-btn flex-shrink-0 px-3 py-1.5 rounded-full bg-oriental-cardbg text-gray-300">Luận Giải</button>
+            <button onclick="switchTab('boique')" class="mobile-tab-btn flex-shrink-0 px-3 py-1.5 rounded-full bg-oriental-cardbg text-gray-300">Gieo Quẻ</button>
+            <button onclick="switchTab('congiap')" class="mobile-tab-btn flex-shrink-0 px-3 py-1.5 rounded-full bg-oriental-cardbg text-gray-300">12 Con Giáp</button>
+            <button onclick="switchTab('tinhduyen')" class="mobile-tab-btn flex-shrink-0 px-3 py-1.5 rounded-full bg-oriental-cardbg text-gray-300">Tình Duyên</button>
+            <button onclick="switchTab('lichamduong')" class="mobile-tab-btn flex-shrink-0 px-3 py-1.5 rounded-full bg-oriental-cardbg text-gray-300">Lịch Âm Dương</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6">
+
+        <!-- ================= SECTION 1: LẬP LÁ SỐ TỬ VI ================= -->
+        <section id="tab-laso" class="tab-content space-y-6">
+            <!-- Form Input Section -->
+            <div class="no-print bg-oriental-cardbg/90 border border-oriental-border rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden backdrop-blur-md">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl text-gold pointer-events-none">
+                    <i class="fa-solid fa-compass"></i>
+                </div>
+
+                <div class="border-b border-oriental-border pb-4 mb-6 flex items-center justify-between">
+                    <div>
+                        <h2 class="font-cinzel text-xl sm:text-2xl font-bold gold-gradient-text flex items-center gap-2">
+                            <i class="fa-solid fa-id-card text-gold"></i> THÔNG TIN LẬP LÁ SỐ TỬ VI
+                        </h2>
+                        <p class="text-xs sm:text-sm text-gray-400 font-philosopher mt-1">Nhập chính xác giờ, ngày, tháng, năm sinh để an sao lá số tử vi phương Đông</p>
+                    </div>
+                    <span class="hidden sm:inline-block px-3 py-1 bg-oriental-red/40 border border-gold/30 rounded-full text-xs text-amber-300">
+                        Chuẩn Chính Tông Phái
+                    </span>
+                </div>
+
+                <form id="tuViForm" onsubmit="generateTuViChart(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                    <!-- Họ và Tên -->
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-200/90 uppercase tracking-wider mb-2">Họ và Tên</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gold/60"></i>
+                            <input type="text" id="inputName" required value="" placeholder="Nhập họ tên đầy đủ của bạn..." class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border focus:border-gold focus:outline-none text-amber-100 text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Giới tính -->
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-200/90 uppercase tracking-wider mb-2">Giới Tính</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="cursor-pointer flex items-center justify-center p-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border hover:border-gold has-[:checked]:border-gold has-[:checked]:bg-oriental-red/40 transition-all text-sm">
+                                <input type="radio" name="gender" value="nam" class="hidden">
+                                <i class="fa-solid fa-mars text-blue-400 mr-2"></i> Nam (Dương)
+                            </label>
+                            <label class="cursor-pointer flex items-center justify-center p-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border hover:border-gold has-[:checked]:border-gold has-[:checked]:bg-oriental-red/40 transition-all text-sm">
+                                <input type="radio" name="gender" value="nu" class="hidden">
+                                <i class="fa-solid fa-venus text-pink-400 mr-2"></i> Nữ (Âm)
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Loại Lịch (Dương / Âm) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-200/90 uppercase tracking-wider mb-2">Loại Lịch Sinh</label>
+                        <select id="calendarType" class="w-full px-3 py-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border focus:border-gold focus:outline-none text-amber-100 text-sm">
+                            <option value="" disabled selected>-- Chọn loại lịch --</option>
+                            <option value="duong">Dương Lịch (Lịch Tây)</option>
+                            <option value="am">Âm Lịch (Lịch Ta)</option>
+                        </select>
+                    </div>
+
+                    <!-- Ngày Tháng Năm Sinh -->
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-200/90 uppercase tracking-wider mb-2">Ngày / Tháng / Năm Sinh</label>
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <select id="birthDay" class="px-2 py-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border text-amber-100 text-xs focus:border-gold"></select>
+                            <select id="birthMonth" class="px-2 py-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border text-amber-100 text-xs focus:border-gold"></select>
+                            <select id="birthYear" class="px-2 py-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border text-amber-100 text-xs focus:border-gold"></select>
+                        </div>
+                    </div>
+
+                    <!-- Giờ Sinh (12 Giờ Địa Chi) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-200/90 uppercase tracking-wider mb-2">Giờ Sinh (Âm Lịch)</label>
+                        <select id="birthHour" class="w-full px-3 py-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border focus:border-gold text-amber-100 text-sm">
+                            <option value="" disabled selected>-- Chọn giờ sinh --</option>
+                            <option value="0">Giờ Tý (23h00 - 00h59)</option>
+                            <option value="1">Giờ Sửu (01h00 - 02h59)</option>
+                            <option value="2">Giờ Dần (03h00 - 04h59)</option>
+                            <option value="3">Giờ Mão (05h00 - 06h59)</option>
+                            <option value="4">Giờ Thìn (07h00 - 08h59)</option>
+                            <option value="5">Giờ Tỵ (09h00 - 10h59)</option>
+                            <option value="6">Giờ Ngọ (11h00 - 12h59)</option>
+                            <option value="7">Giờ Mùi (13h00 - 14h59)</option>
+                            <option value="8">Giờ Thân (15h00 - 16h59)</option>
+                            <option value="9">Giờ Dậu (17h00 - 18h59)</option>
+                            <option value="10">Giờ Tuất (19h00 - 20h59)</option>
+                            <option value="11">Giờ Hợi (21h00 - 22h59)</option>
+                        </select>
+                    </div>
+
+                    <!-- Năm Xem Tử Vi -->
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-200/90 uppercase tracking-wider mb-2">Năm Xem Hạn</label>
+                        <select id="viewYear" class="w-full px-3 py-2.5 rounded-xl bg-oriental-darkbg border border-oriental-border focus:border-gold text-amber-100 text-sm"></select>
+                    </div>
+
+                    <!-- Tùy chọn xem an sao -->
+                    <div>
+                        <label class="block text-xs font-semibold text-amber-200/90 uppercase tracking-wider mb-2">Tùy Chọn Lập Lá Số</label>
+                        <div class="flex items-center space-x-2 pt-2">
+                            <input type="checkbox" id="chkLeapMonth" class="accent-amber-500 w-4 h-4 rounded">
+                            <label for="chkLeapMonth" class="text-xs text-gray-300">Tháng sinh là Tháng Nhuận</label>
+                        </div>
+                    </div>
+
+                    <!-- Button Submit -->
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-oriental-red via-red-700 to-amber-600 hover:brightness-125 font-bold text-gold-light border border-gold/50 shadow-xl transition-all duration-200 flex items-center justify-center space-x-2 cursor-pointer">
+                            <i class="fa-solid fa-dharmachakra animate-spin-slow"></i>
+                            <span>AN SAO LÁ SỐ TỬ VI</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Placeholder Khung Hướng Dẫn khi chưa bấm An Sao -->
+            <div id="tuViChartPlaceholder" class="bg-oriental-cardbg/80 border border-dashed border-oriental-border/80 rounded-2xl p-10 text-center text-gray-400 space-y-4 shadow-xl">
+                <div class="w-16 h-16 mx-auto rounded-full bg-oriental-purple/80 border border-gold/40 flex items-center justify-center text-gold text-2xl">
+                    <i class="fa-solid fa-scroll"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-amber-300 font-cinzel">CHƯA AN SAO LÁ SỐ</h3>
+                    <p class="text-xs sm:text-sm max-w-lg mx-auto text-gray-300 font-philosopher mt-2 leading-relaxed">
+                        Vui lòng nhập đầy đủ <strong>Họ tên</strong>, chọn <strong>Ngày / Tháng / Năm / Giờ sinh</strong> ở bảng thông tin phía trên và nhấn nút <span class="text-gold font-bold">"AN SAO LÁ SỐ TỬ VI"</span> để khởi tạo lá số và xem bình giải chi tiết.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Lá Số Display Matrix (4x4 Tử Vi Grid) - Ẩn mặc định cho tới khi người dùng tạo lá số -->
+            <div id="tuViChartContainer" class="hidden bg-oriental-darkbg rounded-2xl p-2 sm:p-4 border border-oriental-border shadow-2xl relative">
+                
+                <!-- Action Bar above chart -->
+                <div class="no-print flex flex-wrap items-center justify-between gap-2 mb-4 bg-oriental-purple/60 p-3 rounded-xl border border-oriental-border">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span class="text-xs sm:text-sm font-semibold text-amber-200" id="chartOwnerTitle">Lá Số Tử Vi</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-xs">
+                        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg bg-oriental-cardbg border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all flex items-center space-x-1">
+                            <i class="fa-solid fa-print"></i> <span>In Lá Số</span>
+                        </button>
+                        <button onclick="shareChart()" class="px-3 py-1.5 rounded-lg bg-oriental-cardbg border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all flex items-center space-x-1">
+                            <i class="fa-solid fa-share-nodes"></i> <span>Chia Sẻ</span>
+                        </button>
+                        <button onclick="switchTab('luangiai')" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-600 to-yellow-600 text-black font-bold hover:brightness-110 transition-all flex items-center space-x-1">
+                            <i class="fa-solid fa-feather-pointed"></i> <span>Xem Luận Giải Chi Tiết</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 12 Cung Matrix (Traditional 4x4 Tử Vi Chart) -->
+                <div class="tuvi-grid font-vietnam text-xs">
+                    <!-- Cell 1: TỴ (Top-Left) -->
+                    <div id="cung-ty" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('ty')"></div>
+
+                    <!-- Cell 2: NGỌ -->
+                    <div id="cung-ngo" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('ngo')"></div>
+
+                    <!-- Cell 3: MÙI -->
+                    <div id="cung-mui" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('mui')"></div>
+
+                    <!-- Cell 4: THÂN (Top-Right) -->
+                    <div id="cung-than" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('than')"></div>
+
+                    <!-- Cell 5: THÌN (Left 2nd row) -->
+                    <div id="cung-thin" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('thin')"></div>
+
+                    <!-- CENTER BOX (Spans 2x2 in Middle) -->
+                    <div class="col-span-2 row-span-2 bg-gradient-to-b from-oriental-purple via-oriental-darkbg to-oriental-purple rounded-xl border-2 border-gold p-3 sm:p-5 flex flex-col justify-between text-center relative overflow-hidden shadow-inner">
+                        <div class="absolute -top-12 -left-12 opacity-5 text-9xl text-gold pointer-events-none">
+                            <i class="fa-solid fa-yin-yang"></i>
+                        </div>
+
+                        <!-- Header Center -->
+                        <div>
+                            <h3 class="font-cinzel text-lg sm:text-2xl font-bold gold-gradient-text uppercase tracking-widest border-b border-gold/30 pb-1" id="centerName">
+                                --
+                            </h3>
+                            <p class="text-xs text-amber-300 font-philosopher mt-1" id="centerGenderYear">
+                                --
+                            </p>
+                        </div>
+
+                        <!-- Detailed Specs in Center -->
+                        <div class="grid grid-cols-2 gap-2 text-left text-xs my-2 bg-oriental-cardbg/80 p-2.5 rounded-lg border border-oriental-border/60">
+                            <div><span class="text-gray-400">Dương lịch:</span> <span id="centerSolarDate" class="text-gold font-semibold">--</span></div>
+                            <div><span class="text-gray-400">Âm lịch:</span> <span id="centerLunarDate" class="text-amber-200 font-semibold">--</span></div>
+                            <div><span class="text-gray-400">Giờ sinh:</span> <span id="centerHour" class="text-amber-200">--</span></div>
+                            <div><span class="text-gray-400">Mệnh Âm/Dương:</span> <span id="centerYinYang" class="text-amber-200">--</span></div>
+                            <div><span class="text-gray-400">Bản Mệnh:</span> <span id="centerMenhElement" class="text-emerald-400 font-bold">--</span></div>
+                            <div><span class="text-gray-400">Cục:</span> <span id="centerCuc" class="text-cyan-300 font-bold">--</span></div>
+                            <div><span class="text-gray-400">Mệnh/Cục:</span> <span id="centerMenhCucMatch" class="text-amber-300">Cục Sinh Mệnh (Rất Tốt)</span></div>
+                            <div><span class="text-gray-400">Năm xem:</span> <span id="centerViewYear" class="text-red-400 font-bold">--</span></div>
+                        </div>
+
+                        <!-- Footer Center -->
+                        <div class="border-t border-gold/30 pt-1 text-[11px] text-amber-200/80 italic flex justify-between items-center">
+                            <span>Chủ Mệnh: <strong id="centerChuMenh" class="text-gold">Tham Lang</strong></span>
+                            <span>Chủ Thân: <strong id="centerChuThan" class="text-gold">Hỏa Tinh</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Cell 6: DẬU (Right 2nd row) -->
+                    <div id="cung-dau" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('dau')"></div>
+
+                    <!-- Cell 7: MÃO (Left 3rd row) -->
+                    <div id="cung-mao" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('mao')"></div>
+
+                    <!-- Cell 8: TUẤT (Right 3rd row) -->
+                    <div id="cung-tuat" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('tuat')"></div>
+
+                    <!-- Cell 9: DẦN (Bottom-Left) -->
+                    <div id="cung-dan" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('dan')"></div>
+
+                    <!-- Cell 10: TÝ -->
+                    <div id="cung-ty-bot" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('ty-bot')"></div>
+
+                    <!-- Cell 11: SỬU -->
+                    <div id="cung-suu" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('suu')"></div>
+
+                    <!-- Cell 12: HỢI (Bottom-Right) -->
+                    <div id="cung-hoi" class="tuvi-cell bg-oriental-cardbg/95 rounded p-2 flex flex-col justify-between border border-oriental-border relative hover:border-gold transition-all cursor-pointer" onclick="showCungDetail('hoi')"></div>
+                </div>
+
+                <!-- Legend / Element color codes -->
+                <div class="no-print mt-3 flex flex-wrap items-center justify-center gap-4 text-xs text-gray-300 bg-oriental-purple/40 p-2 rounded-lg border border-oriental-border/50">
+                    <span class="font-bold text-amber-200">Quy ước màu Ngũ Hành:</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-slate-200 inline-block border border-gray-400"></span> Kim (Trắng/Bạc)</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span> Mộc (Xanh Lá)</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span> Thủy (Xanh Dương)</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span> Hỏa (Đỏ)</span>
+                    <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span> Thổ (Vàng Brown)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: LUẬN GIẢI LÁ SỐ CHI TIẾT ================= -->
+        <section id="tab-luangiai" class="tab-content hidden space-y-6">
+            <div class="bg-oriental-cardbg border border-oriental-border rounded-2xl p-5 sm:p-8 shadow-2xl">
+                <div class="flex items-center justify-between border-b border-oriental-border pb-4 mb-6">
+                    <div>
+                        <h2 class="font-cinzel text-2xl font-bold gold-gradient-text flex items-center gap-2">
+                            <i class="fa-solid fa-scroll text-gold"></i> BÌNH GIẢI CHI TIẾT LÁ SỐ
+                        </h2>
+                        <p class="text-xs sm:text-sm text-gray-400 font-philosopher">Phân tích Tổng Quan, Mệnh Cục, Vận Hạn & Chi Tiết Các Cung Chức</p>
+                    </div>
+                    <span id="readingOwnerBadge" class="px-3 py-1 bg-oriental-red rounded-full text-xs font-semibold text-gold border border-gold/30">
+                        Chủ Lá Số: Chưa Khởi Tạo
+                    </span>
+                </div>
+
+                <!-- Rating Indices Bar -->
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+                    <div class="bg-oriental-darkbg p-3 rounded-xl border border-oriental-border text-center">
+                        <span class="text-xs text-gray-400 block mb-1">Công Danh - Sự Nghiệp</span>
+                        <div class="text-xl font-bold text-amber-400" id="scoreCareer">85/100</div>
+                        <div class="w-full bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div class="bg-amber-400 h-full rounded-full" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-oriental-darkbg p-3 rounded-xl border border-oriental-border text-center">
+                        <span class="text-xs text-gray-400 block mb-1">Tài Lộc - Tiền Tệ</span>
+                        <div class="text-xl font-bold text-emerald-400" id="scoreWealth">90/100</div>
+                        <div class="w-full bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div class="bg-emerald-400 h-full rounded-full" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-oriental-darkbg p-3 rounded-xl border border-oriental-border text-center">
+                        <span class="text-xs text-gray-400 block mb-1">Tình Duyên - Hôn Nhân</span>
+                        <div class="text-xl font-bold text-pink-400" id="scoreLove">78/100</div>
+                        <div class="w-full bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div class="bg-pink-400 h-full rounded-full" style="width: 78%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-oriental-darkbg p-3 rounded-xl border border-oriental-border text-center">
+                        <span class="text-xs text-gray-400 block mb-1">Sức Khỏe - Bình An</span>
+                        <div class="text-xl font-bold text-blue-400" id="scoreHealth">82/100</div>
+                        <div class="w-full bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div class="bg-blue-400 h-full rounded-full" style="width: 82%"></div>
+                        </div>
+                    </div>
+                    <div class="bg-oriental-darkbg p-3 rounded-xl border border-oriental-border text-center col-span-2 sm:col-span-1">
+                        <span class="text-xs text-gray-400 block mb-1">Gia Đạo - Phúc Đức</span>
+                        <div class="text-xl font-bold text-purple-400" id="scoreFamily">88/100</div>
+                        <div class="w-full bg-gray-700 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div class="bg-purple-400 h-full rounded-full" style="width: 88%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion / Detailed Sections -->
+                <div class="space-y-4" id="luanGiaiAccordion">
+                    
+                    <!-- 1. TỔNG QUAN ÂM DƯƠNG MỆNH CỤC -->
+                    <div class="border border-oriental-border rounded-xl bg-oriental-darkbg overflow-hidden">
+                        <button onclick="toggleAccordion('acc-tongquan')" class="w-full p-4 text-left font-bold gold-gradient-text bg-oriental-purple/40 hover:bg-oriental-purple/70 flex justify-between items-center">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-yin-yang text-gold"></i> I. TỔNG QUAN BẢN MỆNH & ÂM DƯƠNG CỤC</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-gold"></i>
+                        </button>
+                        <div id="acc-tongquan" class="p-4 sm:p-6 text-sm text-gray-200 space-y-3 leading-relaxed border-t border-oriental-border">
+                            <div id="textTongQuan">Đang tổng hợp luận giải...</div>
+                        </div>
+                    </div>
+
+                    <!-- 2. LUẬN GIẢI CUNG MỆNH & THÂN -->
+                    <div class="border border-oriental-border rounded-xl bg-oriental-darkbg overflow-hidden">
+                        <button onclick="toggleAccordion('acc-menh')" class="w-full p-4 text-left font-bold gold-gradient-text bg-oriental-purple/40 hover:bg-oriental-purple/70 flex justify-between items-center">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-user-shield text-amber-400"></i> II. BÌNH GIẢI CUNG MỆNH & CUNG THÂN</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-gold"></i>
+                        </button>
+                        <div id="acc-menh" class="p-4 sm:p-6 text-sm text-gray-200 space-y-3 leading-relaxed border-t border-oriental-border">
+                            <div id="textCungMenh">Đang tổng hợp luận giải...</div>
+                        </div>
+                    </div>
+
+                    <!-- 3. CUNG QUAN LỘC & TÀI BẠCH -->
+                    <div class="border border-oriental-border rounded-xl bg-oriental-darkbg overflow-hidden">
+                        <button onclick="toggleAccordion('acc-quantai')" class="w-full p-4 text-left font-bold gold-gradient-text bg-oriental-purple/40 hover:bg-oriental-purple/70 flex justify-between items-center">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-briefcase text-emerald-400"></i> III. TÀI LỘC, TIỀN BẠC & SỰ NGHIỆP (QUAN LỘC - TÀI BẠCH)</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-gold"></i>
+                        </button>
+                        <div id="acc-quantai" class="p-4 sm:p-6 text-sm text-gray-200 space-y-3 leading-relaxed border-t border-oriental-border">
+                            <div id="textQuanTai">Đang tổng hợp luận giải...</div>
+                        </div>
+                    </div>
+
+                    <!-- 4. TÌNH DUYÊN, PHU THÊ & GIA ĐẠO -->
+                    <div class="border border-oriental-border rounded-xl bg-oriental-darkbg overflow-hidden">
+                        <button onclick="toggleAccordion('acc-phuthe')" class="w-full p-4 text-left font-bold gold-gradient-text bg-oriental-purple/40 hover:bg-oriental-purple/70 flex justify-between items-center">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-heart-pulse text-pink-400"></i> IV. TÌNH DUYÊN, PHU THÊ & GIA ĐẠO</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-gold"></i>
+                        </button>
+                        <div id="acc-phuthe" class="p-4 sm:p-6 text-sm text-gray-200 space-y-3 leading-relaxed border-t border-oriental-border">
+                            <div id="textPhuThe">Đang tổng hợp luận giải...</div>
+                        </div>
+                    </div>
+
+                    <!-- 5. VẬN HẠN ĐẠI VẬN & TIỂU VẬN NĂM XEM -->
+                    <div class="border border-oriental-border rounded-xl bg-oriental-darkbg overflow-hidden">
+                        <button onclick="toggleAccordion('acc-vanhan')" class="w-full p-4 text-left font-bold gold-gradient-text bg-oriental-purple/40 hover:bg-oriental-purple/70 flex justify-between items-center">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-hourglass-half text-cyan-400"></i> V. DỰ BÁO VẬN HẠN ĐẠI VẬN 10 NĂM & TIỂU VẬN NĂM XEM</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-gold"></i>
+                        </button>
+                        <div id="acc-vanhan" class="p-4 sm:p-6 text-sm text-gray-200 space-y-3 leading-relaxed border-t border-oriental-border">
+                            <div id="textVanHan">Đang tổng hợp luận giải...</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: BÓI QUẺ & PHONG THỦY ================= -->
+        <section id="tab-boique" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- BÓI QUẺ KINHDỊCH (GIEO XU / RÚT XĂM) -->
+                <div class="bg-oriental-cardbg border border-oriental-border rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-oriental-border pb-3 mb-4">
+                            <h3 class="font-cinzel text-xl font-bold gold-gradient-text flex items-center gap-2">
+                                <i class="fa-solid fa-coins text-yellow-500"></i> GIEO QUẺ KINH DỊCH MAY MẮN
+                            </h3>
+                            <span class="text-xs text-amber-300 bg-oriental-red/40 px-2.5 py-1 rounded-full border border-gold/30">Linh Quẻ Hàng Ngày</span>
+                        </div>
+                        <p class="text-xs text-gray-300 mb-6 font-philosopher">Hãy tĩnh tâm, nhắm mắt cầu nguyện điều ước của bạn và bấm "Gieo Quẻ" để rút 3 đồng xu Kinh Dịch cổ.</p>
+
+                        <!-- Coin Toss Visual Animation Area -->
+                        <div class="bg-oriental-darkbg rounded-xl p-6 border border-oriental-border text-center min-h-[200px] flex flex-col items-center justify-center space-y-4">
+                            <div class="flex items-center justify-center space-x-4 my-2">
+                                <div id="coin1" class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-200 border-2 border-gold flex items-center justify-center text-black font-bold text-xl shadow-lg">
+                                    <i class="fa-solid fa-yin-yang"></i>
+                                </div>
+                                <div id="coin2" class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-200 border-2 border-gold flex items-center justify-center text-black font-bold text-xl shadow-lg">
+                                    <i class="fa-solid fa-yin-yang"></i>
+                                </div>
+                                <div id="coin3" class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-200 border-2 border-gold flex items-center justify-center text-black font-bold text-xl shadow-lg">
+                                    <i class="fa-solid fa-yin-yang"></i>
+                                </div>
+                            </div>
+                            <div id="queStatusText" class="text-sm font-semibold text-amber-300">Sẵn sàng gieo quẻ linh ứng</div>
+                        </div>
+
+                        <!-- Result Box -->
+                        <div id="queResultBox" class="hidden mt-4 p-4 rounded-xl bg-oriental-purple/60 border border-gold/40 text-sm space-y-2">
+                            <div class="font-bold text-amber-300 text-base flex items-center justify-between">
+                                <span id="queTitle">Quẻ Số 15: Địa Sơn Khiêm</span>
+                                <span id="queTag" class="text-xs px-2 py-0.5 rounded bg-emerald-600 text-white">Thượng Cát</span>
+                            </div>
+                            <p class="text-gray-200 italic" id="queContent">Lời quẻ: Khiêm tốn thụ hưởng phúc lộc. Công việc hanh thông, hanh phúc tự tìm đến.</p>
+                            <div class="text-xs text-amber-200/90 pt-2 border-t border-amber-500/20" id="queAdvice">
+                                <strong>Lời khuyên:</strong> Hãy giữ thái độ hòa nhã, tôn trọng mọi người xung quanh, vận may sẽ mỉm cười trong hôm nay.
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="gieoQueKinhDich()" class="mt-6 w-full py-3 rounded-xl bg-gradient-to-r from-yellow-600 via-amber-500 to-yellow-600 text-black font-bold hover:brightness-110 shadow-lg flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-hand-holding-hand"></i>
+                        <span>GIEO QUẺ NGAY</span>
+                    </button>
+                </div>
+
+                <!-- TRA CỨU PHONG THỦY BÁT TRẠCH & MÀU SẮC -->
+                <div class="bg-oriental-cardbg border border-oriental-border rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-oriental-border pb-3 mb-4">
+                            <h3 class="font-cinzel text-xl font-bold gold-gradient-text flex items-center gap-2">
+                                <i class="fa-solid fa-compass text-amber-400"></i> TRA CỨU PHONG THỦY THEO NĂM SINH
+                            </h3>
+                            <span class="text-xs text-cyan-300 bg-oriental-purple/80 px-2.5 py-1 rounded-full border border-cyan-500/30">Bát Trạch Mệnh</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-amber-200 mb-1">Năm Sinh Dương Lịch</label>
+                                <select id="fengshuiYear" class="w-full px-3 py-2 rounded-xl bg-oriental-darkbg border border-oriental-border text-xs text-amber-100 focus:border-gold"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-amber-200 mb-1">Giới Tính</label>
+                                <select id="fengshuiGender" class="w-full px-3 py-2 rounded-xl bg-oriental-darkbg border border-oriental-border text-xs text-amber-100 focus:border-gold">
+                                    <option value="" disabled selected>-- Chọn giới tính --</option>
+                                    <option value="nam">Nam Mạng</option>
+                                    <option value="nu">Nữ Mạng</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="lookupFengShui()" class="w-full py-2.5 rounded-xl bg-oriental-red border border-gold/40 text-gold font-bold hover:bg-gold hover:text-black transition-all text-xs mb-4">
+                            <i class="fa-solid fa-magnifying-glass"></i> TRA CỨU NGAY
+                        </button>
+
+                        <!-- Fengshui Output -->
+                        <div id="fengshuiResult" class="space-y-3 text-xs bg-oriental-darkbg p-4 rounded-xl border border-oriental-border">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div><span class="text-gray-400">Mệnh Cung Phi:</span> <strong id="fsCungPhi" class="text-amber-300">Càn (Kim) - Tây Tứ Mệnh</strong></div>
+                                <div><span class="text-gray-400">Màu Hợp:</span> <strong id="fsMauHop" class="text-emerald-400">Vàng, Trắng, Nâu</strong></div>
+                                <div><span class="text-gray-400">Màu Kỵ:</span> <strong id="fsMauKy" class="text-red-400">Đỏ, Hồng, Tím</strong></div>
+                                <div><span class="text-gray-400">Con Số May Mắn:</span> <strong id="fsSoMayMan" class="text-gold">6, 7, 8</strong></div>
+                            </div>
+                            <div class="border-t border-oriental-border pt-2">
+                                <span class="text-gray-400 block mb-1">Hướng Nhà / Hướng Bàn Làm Việc Tốt:</span>
+                                <p id="fsHuongTot" class="text-emerald-300 font-medium">Tây Bắc (Sinh Khí), Tây (Thiên Y), Đông Bắc (Diên Niên), Tây Nam (Phục Vị)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-3 rounded-xl bg-gradient-to-r from-amber-900/30 to-purple-900/30 border border-gold/30 text-xs text-amber-200">
+                        <i class="fa-solid fa-lightbulb text-gold mr-1"></i>
+                        <span>Ứng dụng: Chọn màu sơn nhà, màu xe, hướng bàn làm việc, vật phẩm phong thủy hợp mệnh nâng cao tài vận.</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= SECTION 4: 12 CON GIÁP & 12 CUNG HOÀNG ĐẠO ================= -->
+        <section id="tab-congiap" class="tab-content hidden space-y-6">
+            <div class="bg-oriental-cardbg border border-oriental-border rounded-2xl p-5 sm:p-6 shadow-2xl">
+                <!-- Sub Tabs selector -->
+                <div class="flex items-center justify-between border-b border-oriental-border pb-4 mb-6">
+                    <h2 class="font-cinzel text-xl font-bold gold-gradient-text flex items-center gap-2">
+                        <i class="fa-solid fa-dragon text-red-500"></i> TRA CỨU VẬN TRÌNH 12 CON GIÁP & CUNG HOÀNG ĐẠO
+                    </h2>
+                    <div class="flex bg-oriental-darkbg p-1 rounded-xl border border-oriental-border text-xs">
+                        <button onclick="toggleZodiacMode('congiap')" id="subnav-congiap" class="px-3 py-1.5 rounded-lg bg-oriental-red text-gold font-bold">12 Con Giáp</button>
+                        <button onclick="toggleZodiacMode('hoangdao')" id="subnav-hoangdao" class="px-3 py-1.5 rounded-lg text-gray-400 hover:text-white">12 Cung Hoàng Đạo</button>
+                    </div>
+                </div>
+
+                <!-- Grid Items Selection -->
+                <div id="zodiacGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3 mb-6">
+                    <!-- Dynamic rendered Zodiac Buttons -->
+                </div>
+
+                <!-- Selected Zodiac Detail Output -->
+                <div id="zodiacDetailCard" class="bg-oriental-darkbg rounded-xl p-5 sm:p-6 border border-gold/40 space-y-4">
+                    <div class="flex items-center space-x-4 border-b border-oriental-border pb-4">
+                        <div id="zodiacIcon" class="w-16 h-16 rounded-full bg-gradient-to-br from-oriental-red to-amber-600 border-2 border-gold flex items-center justify-center text-3xl text-gold-glow">
+                            🐀
+                        </div>
+                        <div>
+                            <h3 id="zodiacName" class="font-cinzel text-2xl font-bold text-gold">Tuổi Tý (Chuột)</h3>
+                            <p id="zodiacYears" class="text-xs text-amber-200">Năm sinh: 1960, 1972, 1984, 1996, 2008, 2020</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-200">
+                        <div class="bg-oriental-cardbg p-4 rounded-lg border border-oriental-border">
+                            <h4 class="font-bold text-amber-300 mb-2 flex items-center gap-2"><i class="fa-solid fa-star text-gold"></i> Tổng Quan Vận Trình Năm 2026</h4>
+                            <p id="zodiacOverview" class="text-xs leading-relaxed text-gray-300">Năm 2026 mang đến nhiều cơ hội bứt phá trong sự nghiệp. Cần chú ý giữ vững tâm lý và nắm bắt thời cơ đầu năm.</p>
+                        </div>
+                        <div class="bg-oriental-cardbg p-4 rounded-lg border border-oriental-border">
+                            <h4 class="font-bold text-emerald-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-sack-dollar"></i> Công Danh & Tài Lộc</h4>
+                            <p id="zodiacCareer" class="text-xs leading-relaxed text-gray-300">Tài chính hanh thông, có lộc ăn uống và thưởng lớn. Đầu tư nên thận trọng vào các tháng giữa năm.</p>
+                        </div>
+                        <div class="bg-oriental-cardbg p-4 rounded-lg border border-oriental-border">
+                            <h4 class="font-bold text-pink-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-heart"></i> Tình Duyên & Gia Đạo</h4>
+                            <p id="zodiacLove" class="text-xs leading-relaxed text-gray-300">Người độc thân dễ gặp nhân duyên như ý. Đời sống gia đình hòa thuận, có tin vui về con cái.</p>
+                        </div>
+                        <div class="bg-oriental-cardbg p-4 rounded-lg border border-oriental-border">
+                            <h4 class="font-bold text-blue-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-notes-medical"></i> Sức Khỏe & Chú Ý</h4>
+                            <p id="zodiacHealth" class="text-xs leading-relaxed text-gray-300">Sức khỏe dồi dào, cần chú ý chế độ ăn uống cân bằng và tránh thức khuya làm việc quá sức.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 5: BÓI TÌNH DUYÊN ================= -->
+        <section id="tab-tinhduyen" class="tab-content hidden space-y-6">
+            <div class="bg-oriental-cardbg border border-oriental-border rounded-2xl p-5 sm:p-8 shadow-2xl">
+                <div class="border-b border-oriental-border pb-4 mb-6 text-center">
+                    <h2 class="font-cinzel text-2xl font-bold gold-gradient-text flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-heart text-pink-500"></i> BÓI TÌNH DUYÊN & TƯƠNG HỢP LỨA ĐÔI
+                    </h2>
+                    <p class="text-xs sm:text-sm text-gray-400 font-philosopher mt-1">Phân tích độ hợp nhau dựa trên Ngũ Hành, Can Chi, Cung Mệnh & Lương Duyên</p>
+                </div>
+
+                <form onsubmit="checkLoveCompatibility(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <!-- Person 1 -->
+                    <div class="bg-oriental-darkbg p-5 rounded-xl border border-blue-500/30 space-y-3">
+                        <h3 class="font-bold text-blue-400 border-b border-blue-500/20 pb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-mars"></i> THÔNG TIN NAM (HOẶC NGƯỜI THỨ NHẤT)
+                        </h3>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Họ Tên</label>
+                            <input type="text" id="loveName1" placeholder="Nhập họ tên..." class="w-full px-3 py-2 rounded-lg bg-oriental-cardbg border border-oriental-border text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Năm Sinh (Dương Lịch)</label>
+                            <select id="loveYear1" class="w-full px-3 py-2 rounded-lg bg-oriental-cardbg border border-oriental-border text-xs text-white"></select>
+                        </div>
+                    </div>
+
+                    <!-- Person 2 -->
+                    <div class="bg-oriental-darkbg p-5 rounded-xl border border-pink-500/30 space-y-3">
+                        <h3 class="font-bold text-pink-400 border-b border-pink-500/20 pb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-venus"></i> THÔNG TIN NỮ (HOẶC NGƯỜI THỨ HA)
+                        </h3>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Họ Tên</label>
+                            <input type="text" id="loveName2" placeholder="Nhập họ tên..." class="w-full px-3 py-2 rounded-lg bg-oriental-cardbg border border-oriental-border text-xs text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Năm Sinh (Dương Lịch)</label>
+                            <select id="loveYear2" class="w-full px-3 py-2 rounded-lg bg-oriental-cardbg border border-oriental-border text-xs text-white"></select>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-600 via-red-600 to-amber-500 text-white font-bold hover:brightness-110 shadow-xl transition-all">
+                            <i class="fa-solid fa-heart-circle-check mr-2"></i> PHÂN TÍCH ĐỘ TƯƠNG HỢP
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Love Output Card -->
+                <div id="loveResultCard" class="hidden mt-8 max-w-4xl mx-auto bg-oriental-darkbg p-6 rounded-xl border border-gold/40 text-center space-y-4">
+                    <div class="inline-block px-4 py-1 rounded-full bg-pink-900/40 border border-pink-500 text-pink-300 text-xs font-semibold">
+                        Kết Quả Phân Tích Lứa Đôi
+                    </div>
+
+                    <div class="flex justify-center items-center space-x-6 my-4">
+                        <span id="loveDisplayName1" class="font-bold text-lg text-blue-300">Nguyễn Văn A</span>
+                        <div class="relative flex items-center justify-center">
+                            <i class="fa-solid fa-heart text-5xl text-red-500 animate-pulse"></i>
+                            <span id="loveScore" class="absolute text-white font-bold text-sm">88%</span>
+                        </div>
+                        <span id="loveDisplayName2" class="font-bold text-lg text-pink-300">Trần Thị B</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-left">
+                        <div class="bg-oriental-cardbg p-3 rounded-lg border border-oriental-border">
+                            <span class="text-gray-400 block mb-1">Tương Hợp Ngũ Hành:</span>
+                            <strong id="loveElementMatch" class="text-emerald-400">Tương Sinh (Rất Tốt)</strong>
+                        </div>
+                        <div class="bg-oriental-cardbg p-3 rounded-lg border border-oriental-border">
+                            <span class="text-gray-400 block mb-1">Tương Hợp Can Chi:</span>
+                            <strong id="loveCanChiMatch" class="text-amber-300">Tam Hợp Hanh Thông</strong>
+                        </div>
+                        <div class="bg-oriental-cardbg p-3 rounded-lg border border-oriental-border">
+                            <span class="text-gray-400 block mb-1">Cung Phi Bát Trạch:</span>
+                            <strong id="loveCungMatch" class="text-cyan-300">Diên Niên - Hạnh Phúc</strong>
+                        </div>
+                    </div>
+
+                    <p id="loveAdviceText" class="text-xs text-gray-300 leading-relaxed italic bg-oriental-purple/30 p-4 rounded-lg border border-oriental-border">
+                        "Hai bạn có chỉ số duyên số rất cao. Sự thấu hiểu và nhường nhịn lẫn nhau chính là chìa khóa duy trì hạnh phúc bền lâu."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 6: LỊCH ÂM DƯƠNG & NGÀY TỐT XẤU ================= -->
+        <section id="tab-lichamduong" class="tab-content hidden space-y-6">
+            <div class="bg-oriental-cardbg border border-oriental-border rounded-2xl p-5 sm:p-8 shadow-2xl">
+                <div class="flex items-center justify-between border-b border-oriental-border pb-4 mb-6">
+                    <div>
+                        <h2 class="font-cinzel text-xl font-bold gold-gradient-text flex items-center gap-2">
+                            <i class="fa-regular fa-calendar-days text-emerald-400"></i> LỊCH ÂM DƯƠNG & XEM NGÀY HOÀNG ĐẠO
+                        </h2>
+                        <p class="text-xs text-gray-400 font-philosopher">Tra cứu ngày tốt xấu, giờ Hoàng Đạo, việc nên làm và kiêng kỵ</p>
+                    </div>
+                    <div class="text-right">
+                        <span id="calendarTodayString" class="text-xs text-amber-300 font-bold block">Hôm nay: 15/10/2026</span>
+                        <span id="calendarLunarTodayString" class="text-xs text-gray-400">Âm lịch: 05/09/Bính Ngọ</span>
+                    </div>
+                </div>
+
+                <!-- Calendar View Container -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left: Interactive Calendar Controls & Mini Grid -->
+                    <div class="lg:col-span-2 bg-oriental-darkbg p-4 sm:p-6 rounded-xl border border-oriental-border">
+                        <div class="flex items-center justify-between mb-4">
+                            <button onclick="changeCalendarMonth(-1)" class="px-3 py-1 rounded bg-oriental-cardbg border border-gold/30 text-gold hover:bg-gold hover:text-black text-xs">
+                                <i class="fa-solid fa-chevron-left"></i> Tháng Trước
+                            </button>
+                            <span id="calendarCurrentMonthYear" class="font-cinzel font-bold text-amber-300 text-base">Tháng 10 / 2026</span>
+                            <button onclick="changeCalendarMonth(1)" class="px-3 py-1 rounded bg-oriental-cardbg border border-gold/30 text-gold hover:bg-gold hover:text-black text-xs">
+                                Tháng Sau <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Days Header -->
+                        <div class="grid grid-cols-7 gap-1 text-center font-bold text-xs text-amber-200/80 mb-2">
+                            <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
+                        </div>
+
+                        <!-- Month Days Grid -->
+                        <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1.5 text-xs">
+                            <!-- JS dynamically populates calendar days -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Selected Day Details -->
+                    <div class="bg-oriental-darkbg p-5 rounded-xl border border-gold/40 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="text-center border-b border-oriental-border pb-3 mb-3">
+                                <span class="text-xs text-amber-300 uppercase tracking-widest block">Chi Tiết Ngày Được Chọn</span>
+                                <div class="text-3xl font-bold text-gold my-1" id="selectedSolarDay">15</div>
+                                <div class="text-xs text-gray-300" id="selectedDayFullInfo">Thứ Năm, 15/10/2026</div>
+                                <div class="text-xs text-amber-400 font-semibold" id="selectedLunarFullInfo">Âm Lịch: Ngày 05 Tháng 09 (Bính Ngọ)</div>
+                            </div>
+
+                            <div class="space-y-3 text-xs">
+                                <div>
+                                    <span class="text-gray-400 block mb-0.5">Trực / Đánh giá:</span>
+                                    <span id="selectedDayQuality" class="px-2 py-0.5 rounded bg-emerald-900/60 text-emerald-300 font-bold border border-emerald-500/40">Ngược Hoàng Đạo - Cát Lành</span>
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 block mb-0.5">Giờ Hoàng Đạo tốt trong ngày:</span>
+                                    <p id="selectedGoodHours" class="text-amber-200">Tý (23-1), Dần (3-5), Mão (5-7), Ngọ (11-13), Mùi (13-15), Dậu (17-19)</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 block mb-0.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Việc nên làm:</span>
+                                    <p id="selectedGoodActivities" class="text-gray-200">Khai trương, cầu tài lộc, xuất hành, đính hôn, sửa chữa nhà cửa.</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 block mb-0.5"><i class="fa-solid fa-circle-xmark text-red-400"></i> Việc kỵ nên tránh:</span>
+                                    <p id="selectedBadActivities" class="text-gray-200">Kiêng động thổ xây cất lớn, kiện tụng, tranh chấp.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-oriental-cardbg rounded-lg border border-oriental-border text-[11px] text-amber-200/80 italic">
+                            <i class="fa-solid fa-circle-info text-gold mr-1"></i> "Chọn ngày Hoàng Đạo mang lại may mắn, vạn sự khởi đầu hanh thông."
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- CUNG DETAIL MODAL -->
+    <div id="cungModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-oriental-cardbg border-2 border-gold rounded-2xl max-w-xl w-full p-6 relative text-white space-y-4 shadow-2xl">
+            <button onclick="closeCungModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gold text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center space-x-3 border-b border-oriental-border pb-3">
+                <div class="w-10 h-10 rounded-full bg-oriental-red flex items-center justify-center text-gold font-bold text-lg border border-gold">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div>
+                    <h3 id="modalCungTitle" class="font-cinzel text-xl font-bold text-gold">Cung Mệnh (Tý)</h3>
+                    <p id="modalCungSub" class="text-xs text-amber-200">Đại Vận 26 - 35 Tuổi</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-xs max-h-[60vh] overflow-y-auto pr-2">
+                <div>
+                    <strong class="text-amber-300 block mb-1">Chính Tinh Tọa Thủ:</strong>
+                    <div id="modalMajorStars" class="flex flex-wrap gap-1.5"></div>
+                </div>
+                <div>
+                    <strong class="text-amber-300 block mb-1">Phụ Tinh & Tứ Hóa:</strong>
+                    <div id="modalMinorStars" class="flex flex-wrap gap-1.5 text-gray-300"></div>
+                </div>
+                <div class="border-t border-oriental-border pt-2">
+                    <strong class="text-amber-300 block mb-1">Giải Nghĩa Cung Chức:</strong>
+                    <p id="modalCungMeaning" class="text-gray-300 leading-relaxed"></p>
+                </div>
+            </div>
+
+    <!-- NOTIFICATION TOAST MESSAGES -->
+    <div id="toastNotice" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-oriental-cardbg border-2 border-amber-500 rounded-xl p-4 shadow-2xl flex items-center space-x-3 text-sm text-white max-w-md">
+        <i class="fa-solid fa-circle-exclamation text-amber-400 text-xl flex-shrink-0" id="toastIcon"></i>
+        <span id="toastMessage">Vui lòng điền đầy đủ thông tin.</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="no-print border-t border-oriental-border bg-oriental-darkbg/90 mt-12 py-8 text-center text-xs text-gray-400 font-philosopher">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <div class="flex justify-center items-center space-x-2">
+                <i class="fa-solid fa-yin-yang text-gold text-base"></i>
+                <span class="font-cinzel font-bold text-amber-200 text-sm">TỬ VI & PHONG THỦY ĐẠI VIỆT</span>
+            </div>
+            <p class="max-w-xl mx-auto text-gray-400">Ứng dụng xem Tử Vi, Gieo Quẻ Kinh Dịch & Phong Thủy Phương Đông chuẩn xác, hiện đại. Bảo lưu mọi quyền.</p>
+            <div class="text-[11px] text-gray-400">© 2026 Đại Việt Chiêm Xung Hội. Phát triển cho trải nghiệm người dùng tối ưu.</div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT ENGINE & LOGIC -->
+    <script>
+        /* ================= DATA STRUCTURES & DICTIONARIES ================= */
+        const CAN = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"];
+        const CHI = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"];
+        
+        const NGŨ_HÀNH = {
+            "Kim": { color: "text-slate-100", bg: "bg-slate-700", border: "border-slate-300" },
+            "Mộc": { color: "text-emerald-400", bg: "bg-emerald-950", border: "border-emerald-500" },
+            "Thủy": { color: "text-blue-400", bg: "bg-blue-950", border: "border-blue-500" },
+            "Hỏa": { color: "text-red-400", bg: "bg-red-950", border: "border-red-500" },
+            "Thổ": { color: "text-amber-400", bg: "bg-amber-950", border: "border-amber-500" }
+        };
+
+        const CUNG_NAMES = [
+            "Mệnh", "Phụ Mẫu", "Phúc Đức", "Điền Trạch", 
+            "Quan Lộc", "Nô Bộc", "Thiên Di", "Tật Ách", 
+            "Tài Bạch", "Tử Tức", "Phu Thê", "Huynh Đệ"
+        ];
+
+        const CUNG_GRID_MAP = [
+            { id: "ty", chi: "Tỵ", index: 5 },
+            { id: "ngo", chi: "Ngọ", index: 6 },
+            { id: "mui", chi: "Mùi", index: 7 },
+            { id: "than", chi: "Thân", index: 8 },
+            { id: "thin", chi: "Thìn", index: 4 },
+            { id: "dau", chi: "Dậu", index: 9 },
+            { id: "mao", chi: "Mão", index: 3 },
+            { id: "tuat", chi: "Tuất", index: 10 },
+            { id: "dan", chi: "Dần", index: 2 },
+            { id: "ty-bot", chi: "Tý", index: 0 },
+            { id: "suu", chi: "Sửu", index: 1 },
+            { id: "hoi", chi: "Hợi", index: 11 }
+        ];
+
+        // Global Chart State
+        let currentChartData = {};
+        let currentCalendarDate = new Date(2026, 9, 15); // Oct 15, 2026
+
+        /* ================= INITIALIZATION ================= */
+        window.addEventListener('DOMContentLoaded', () => {
+            populateFormOptions();
+            renderZodiacGrid();
+            renderCalendar();
+        });
+
+        function showToast(msg, isSuccess = false) {
+            const toast = document.getElementById('toastNotice');
+            const toastMsg = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMsg.innerText = msg;
+            toastIcon.className = isSuccess 
+                ? "fa-solid fa-circle-check text-emerald-400 text-xl flex-shrink-0"
+                : "fa-solid fa-circle-exclamation text-amber-400 text-xl flex-shrink-0";
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        function populateFormOptions() {
+            const bDay = document.getElementById('birthDay');
+            const bMonth = document.getElementById('birthMonth');
+            const bYear = document.getElementById('birthYear');
+            const vYear = document.getElementById('viewYear');
+            const fsYear = document.getElementById('fengshuiYear');
+            const lYear1 = document.getElementById('loveYear1');
+            const lYear2 = document.getElementById('loveYear2');
+
+            // Add placeholder options
+            bDay.add(new Option('-- Ngày --', '', true, true));
+            bDay.options[0].disabled = true;
+
+            bMonth.add(new Option('-- Tháng --', '', true, true));
+            bMonth.options[0].disabled = true;
+
+            bYear.add(new Option('-- Năm --', '', true, true));
+            bYear.options[0].disabled = true;
+
+            vYear.add(new Option('-- Năm xem --', '', true, true));
+            vYear.options[0].disabled = true;
+
+            fsYear.add(new Option('-- Chọn năm sinh --', '', true, true));
+            fsYear.options[0].disabled = true;
+
+            lYear1.add(new Option('-- Chọn năm sinh --', '', true, true));
+            lYear1.options[0].disabled = true;
+
+            lYear2.add(new Option('-- Chọn năm sinh --', '', true, true));
+            lYear2.options[0].disabled = true;
+
+            for(let i = 1; i <= 31; i++) {
+                bDay.add(new Option(`Ngày ${i}`, i));
+            }
+            for(let i = 1; i <= 12; i++) {
+                bMonth.add(new Option(`Tháng ${i}`, i));
+            }
+            for(let i = 1940; i <= 2030; i++) {
+                bYear.add(new Option(`Năm ${i}`, i));
+                vYear.add(new Option(`Năm xem ${i}`, i));
+                fsYear.add(new Option(`Năm sinh ${i}`, i));
+                lYear1.add(new Option(`Năm sinh ${i}`, i));
+                lYear2.add(new Option(`Năm sinh ${i}`, i));
+            }
+        }
+
+        /* ================= TAB NAVIGATION ================= */
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-oriental-red', 'text-gold', 'border', 'border-gold/40');
+                btn.classList.add('text-gray-300');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.add('active', 'bg-oriental-red', 'text-gold', 'border', 'border-gold/40');
+                activeBtn.classList.remove('text-gray-300');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ================= TỬ VI CHART GENERATOR ALGORITHM ================= */
+        function generateTuViChart(e) {
+            if(e) e.preventDefault();
+
+            const nameInput = document.getElementById('inputName').value.trim();
+            const genderRadio = document.querySelector('input[name="gender"]:checked');
+            const calType = document.getElementById('calendarType').value;
+            const dayVal = document.getElementById('birthDay').value;
+            const monthVal = document.getElementById('birthMonth').value;
+            const yearVal = document.getElementById('birthYear').value;
+            const hourVal = document.getElementById('birthHour').value;
+            const viewYearVal = document.getElementById('viewYear').value;
+
+            // Form Validation Check
+            if(!nameInput) {
+                showToast("Vui lòng nhập Họ và Tên!");
+                document.getElementById('inputName').focus();
+                return;
+            }
+            if(!genderRadio) {
+                showToast("Vui lòng chọn Giới tính!");
+                return;
+            }
+            if(!calType) {
+                showToast("Vui lòng chọn Loại Lịch Sinh!");
+                document.getElementById('calendarType').focus();
+                return;
+            }
+            if(!dayVal || !monthVal || !yearVal) {
+                showToast("Vui lòng chọn đầy đủ Ngày, Tháng và Năm sinh!");
+                return;
+            }
+            if(hourVal === "") {
+                showToast("Vui lòng chọn Giờ sinh!");
+                document.getElementById('birthHour').focus();
+                return;
+            }
+            if(!viewYearVal) {
+                showToast("Vui lòng chọn Năm xem hạn!");
+                document.getElementById('viewYear').focus();
+                return;
+            }
+
+            const name = nameInput;
+            const gender = genderRadio.value;
+            const day = parseInt(dayVal);
+            const month = parseInt(monthVal);
+            const year = parseInt(yearVal);
+            const hourIndex = parseInt(hourVal);
+            const targetYear = parseInt(viewYearVal);
+
+            // Ẩn bảng thông báo chờ và Hiển thị lá số
+            const placeholder = document.getElementById('tuViChartPlaceholder');
+            const chartContainer = document.getElementById('tuViChartContainer');
+            if (placeholder) placeholder.classList.add('hidden');
+            if (chartContainer) {
+                chartContainer.classList.remove('hidden');
+                // Cuộn mượt đến bảng lá số
+                chartContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+
+            // Calculations
+            const canYear = CAN[(year - 4) % 10];
+            const chiYear = CHI[(year - 4) % 12];
+            const isYin = ["Ất", "Đinh", "Kỷ", "Tân", "Quý"].includes(canYear);
+            const genderText = (gender === "nam") ? (isYin ? "Âm Nam" : "Dương Nam") : (isYin ? "Âm Nữ" : "Dương Nữ");
+
+            // Calculate Cung Mệnh & Cung Thân Positions
+            let menhIndex = (month - 1 - hourIndex + 120) % 12;
+            let thanIndex = (month - 1 + hourIndex) % 12;
+
+            // Determine Cục
+            const cucList = ["Thủy Nhị Cục", "Mộc Tam Cục", "Kim Tứ Cục", "Thổ Ngũ Cục", "Hỏa Lục Cục"];
+            const cucIndex = (year + month) % 5;
+            const cucName = cucList[cucIndex];
+
+            // Nạp Âm Bản Mệnh
+            const menhElements = ["Hải Trung Kim", "Lô Trung Hỏa", "Đại Lâm Mộc", "Lộ Bàng Thổ", "Kiếm Phong Kim", "Sơn Đầu Hỏa", "Giản Hạ Thủy", "Thành Đầu Thổ", "Bạch Lạp Kim", "Dương Liễu Mộc", "Tuyền Trung Thủy", "Ốc Thượng Thổ"];
+            const menhElement = menhElements[(year) % 12];
+
+            // Store in state
+            currentChartData = {
+                name, gender, genderText, day, month, year, hourIndex, targetYear,
+                canYear, chiYear, menhIndex, thanIndex, cucName, menhElement
+            };
+
+            // Update Center Display Box
+            document.getElementById('centerName').innerText = name;
+            document.getElementById('centerGenderYear').innerText = `${genderText} - Sinh năm ${canYear} ${chiYear} (${year})`;
+            document.getElementById('centerSolarDate').innerText = `${day}/${month}/${year}`;
+            document.getElementById('centerLunarDate').innerText = `${day}/${month} - ${canYear} ${chiYear}`;
+            document.getElementById('centerHour').innerText = `Giờ ${CHI[hourIndex]}`;
+            document.getElementById('centerYinYang').innerText = genderText;
+            document.getElementById('centerMenhElement').innerText = menhElement;
+            document.getElementById('centerCuc').innerText = cucName;
+            document.getElementById('centerViewYear').innerText = `${targetYear} (${CAN[(targetYear-4)%10]} ${CHI[(targetYear-4)%12]})`;
+            document.getElementById('chartOwnerTitle').innerText = `Lá Số Tử Vi: ${name} (${year})`;
+            document.getElementById('readingOwnerBadge').innerText = `Chủ Lá Số: ${name}`;
+
+            // Populate 12 Cung Cells
+            render12CungGrid(menhIndex, thanIndex, targetYear);
+            
+            // Generate detailed reading text automatically
+            generateDetailedReadings();
+
+            showToast("An sao lá số thành công!", true);
+        }
+
+        /* ================= TAB NAVIGATION ================= */
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-oriental-red', 'text-gold', 'border', 'border-gold/40');
+                btn.classList.add('text-gray-300');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.add('active', 'bg-oriental-red', 'text-gold', 'border', 'border-gold/40');
+                activeBtn.classList.remove('text-gray-300');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function render12CungGrid(menhIndex, thanIndex, targetYear) {
+            // Major Stars list with elements
+            const majorStarsList = [
+                { name: "Tử Vi", element: "Thổ", type: "Chính" },
+                { name: "Liêm Trinh", element: "Hỏa", type: "Chính" },
+                { name: "Thái Dương", element: "Hỏa", type: "Chính" },
+                { name: "Vũ Khúc", element: "Kim", type: "Chính" },
+                { name: "Thiên Đồng", element: "Thủy", type: "Chính" },
+                { name: "Thái Âm", element: "Thủy", type: "Chính" },
+                { name: "Tham Lang", element: "Mộc", type: "Chính" },
+                { name: "Cự Môn", element: "Thủy", type: "Chính" },
+                { name: "Thiên Lương", element: "Mộc", type: "Chính" },
+                { name: "Thất Sát", element: "Kim", type: "Chính" },
+                { name: "Phá Quân", element: "Thủy", type: "Chính" }
+            ];
+
+            const minorGoodStars = ["Hóa Lộc", "Hóa Quyền", "Hóa Khoa", "Tả Phụ", "Hữu Bật", "Văn Xương", "Văn Khúc", "Thiên Khôi", "Thiên Việt", "Lộc Tồn"];
+            const minorBadStars = ["Hóa Kỵ", "Kình Dương", "Đà La", "Linh Tinh", "Hỏa Tinh", "Địa Không", "Địa Kiếp"];
+
+            CUNG_GRID_MAP.forEach(cell => {
+                const cellEl = document.getElementById(`cung-${cell.id}`);
+                if (!cellEl) return;
+                const chiIndex = cell.index; // 0: Tý, 1: Sửu, ... 11: Hợi
+                
+                // Calculate Cung Name relative to Mệnh
+                // (chiIndex - menhIndex + 12) % 12
+                const cungNameIdx = (chiIndex - menhIndex + 12) % 12;
+                const cungTitle = CUNG_NAMES[cungNameIdx];
+                const isThan = (chiIndex === thanIndex);
+
+                // Deterministic Star Assignment simulation for visual authenticity
+                const assignedStars = [];
+                if((chiIndex + menhIndex) % 3 === 0) assignedStars.push(majorStarsList[0]);
+                if((chiIndex * 2 + 1) % 5 === 0) assignedStars.push(majorStarsList[3]);
+                if((chiIndex + 4) % 4 === 0) assignedStars.push(majorStarsList[6]);
+                if(assignedStars.length === 0) assignedStars.push(majorStarsList[(chiIndex * 3) % majorStarsList.length]);
+
+                // Construct Cell HTML
+                cellEl.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-oriental-border/50 pb-1">
+                        <span class="font-bold text-amber-300 text-xs flex items-center gap-1">
+                            ${cungTitle} ${isThan ? '<span class="text-[9px] bg-red-800 text-gold px-1 rounded">Thân</span>' : ''}
+                        </span>
+                        <span class="text-[10px] text-gray-400 font-semibold">${cell.chi}</span>
+                    </div>
+
+                    <!-- Major Stars -->
+                    <div class="my-1.5 space-y-0.5">
+                        ${assignedStars.map(s => `
+                            <div class="font-bold text-xs ${NGŨ_HÀNH[s.element].color} flex items-center justify-between">
+                                <span><i class="fa-solid fa-star text-[9px] mr-1"></i>${s.name}</span>
+                                <span class="text-[9px] opacity-70">(${s.element})</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Minor Stars -->
+                    <div class="text-[10px] space-y-0.5 border-t border-oriental-border/30 pt-1">
+                        <div class="text-emerald-400 font-medium">
+                            ${minorGoodStars[(chiIndex * 2) % minorGoodStars.length]}, ${minorGoodStars[(chiIndex + 3) % minorGoodStars.length]}
+                        </div>
+                        <div class="text-red-400/90 font-medium">
+                            ${minorBadStars[(chiIndex + 1) % minorBadStars.length]}
+                        </div>
+                    </div>
+
+                    <!-- Footer of Cell -->
+                    <div class="flex items-center justify-between text-[9px] text-gray-400 border-t border-oriental-border/40 pt-1 mt-1">
+                        <span>Đại vận: ${10 + chiIndex * 10}</span>
+                        <span class="text-amber-200/80">Tràng Sinh</span>
+                    </div>
+                `;
+            });
+        }
+
+        /* ================= MODAL CUNG DETAIL ================= */
+        function showCungDetail(cellId) {
+            const cellMap = CUNG_GRID_MAP.find(c => c.id === cellId);
+            if(!cellMap) return;
+
+            const chiName = cellMap.chi;
+            const cungNameIdx = (cellMap.index - currentChartData.menhIndex + 12) % 12;
+            const cungTitle = CUNG_NAMES[cungNameIdx];
+
+            document.getElementById('modalCungTitle').innerText = `Cung ${cungTitle} (Chi ${chiName})`;
+            document.getElementById('modalCungSub').innerText = `Đại vận ${10 + cellMap.index * 10} - ${19 + cellMap.index * 10} Tuổi`;
+            
+            document.getElementById('modalMajorStars').innerHTML = `
+                <span class="px-2 py-1 rounded bg-amber-900/40 border border-amber-500 text-amber-300">Tử Vi (Thổ)</span>
+                <span class="px-2 py-1 rounded bg-red-900/40 border border-red-500 text-red-300">Thất Sát (Kim)</span>
+            `;
+            document.getElementById('modalMinorStars').innerHTML = `
+                <span class="px-2 py-0.5 rounded bg-oriental-darkbg border border-emerald-500 text-emerald-300">Hóa Lộc</span>
+                <span class="px-2 py-0.5 rounded bg-oriental-darkbg border border-blue-500 text-blue-300">Văn Xương</span>
+                <span class="px-2 py-0.5 rounded bg-oriental-darkbg border border-red-500 text-red-300">Kình Dương</span>
+                <span class="px-2 py-0.5 rounded bg-oriental-darkbg border border-purple-500 text-purple-300">Lộc Tồn</span>
+            `;
+
+            document.getElementById('modalCungMeaning').innerText = `Cung ${cungTitle} thể hiện rõ bản tính, sự nghiệp và vận thế tương quan. Trong lá số này, sự hội tụ của các cát tinh đem lại nhiều may mắn, tài lộc dồi dào và bản lĩnh vượt qua khó khăn thách thức.`;
+
+            document.getElementById('cungModal').classList.remove('hidden');
+        }
+
+        function closeCungModal() {
+            document.getElementById('cungModal').classList.add('hidden');
+        }
+
+        /* ================= LUẬN GIẢI ACCORDION LOGIC ================= */
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            if(el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        function generateDetailedReadings() {
+            const d = currentChartData;
+            
+            document.getElementById('textTongQuan').innerHTML = `
+                <p>• <strong>Bản Mệnh:</strong> ${d.name} mang bản mệnh <strong>${d.menhElement}</strong>, tuổi <strong>${d.canYear} ${d.chiYear}</strong> (${d.genderText}).</p>
+                <p>• <strong>Tương quan Mệnh & Cục:</strong> ${d.cucName} - Mệnh và Cục tạo thành thế tương sinh vô cùng thuận lợi. Người có Cục sinh Mệnh là người dễ gặp may mắn trong đời, ra ngoài có người giúp đỡ, dễ gặt hái thành công lớn.</p>
+                <p>• <strong>Âm Dương Thuận Lý:</strong> Bản mệnh thuận lý Âm Dương giúp tinh thần minh mẫn, sống có lý tưởng và kiên định với mục tiêu đã đề ra.</p>
+            `;
+
+            document.getElementById('textCungMenh').innerHTML = `
+                <p>• <strong>Tính Cách & Phong Thái:</strong> Tọa thủ tại Mệnh có các cát tinh chiếu hội, chủ nhân là người thông minh, sắc sảo, có tư duy lãnh đạo và tầm nhìn xa trông rộng. Tính tình nhân hậu, coi trọng uy tín.</p>
+                <p>• <strong>Cung Thân:</strong> Thân cư Quan Lộc/Tài Bạch thể hiện người luôn coi trọng sự nghiệp và trách nhiệm tài chính gia đình. Càng về hậu vận tài xóm càng vững chắc.</p>
+            `;
+
+            document.getElementById('textQuanTai').innerHTML = `
+                <p>• <strong>Đường Công Danh (Quan Lộc):</strong> Sự nghiệp thăng tiến thuận lợi từ giai đoạn trung vận (ngoài 30 tuổi). Hợp với các lĩnh vực kinh doanh, quản lý, công nghệ hoặc tài chính chính xác.</p>
+                <p>• <strong>Đường Tài Lộc (Tài Bạch):</strong> Lộc Tồn và Hóa Lộc chiếu giúp nguồn thu nhập dồi dào, biết tích lũy và đầu tư thông minh.</p>
+            `;
+
+            document.getElementById('textPhuThe').innerHTML = `
+                <p>• <strong>Hôn Nhân & Cuộc Sống Gia Đình:</strong> Vợ/Chồng là người có học thức, biết quán xuyến công việc gia đình. Tuy có đôi lúc tranh chấp nhỏ về quan điểm nhưng đời sống lứa đôi vẫn bền vững, hạnh phúc.</p>
+            `;
+
+            document.getElementById('textVanHan').innerHTML = `
+                <p>• <strong>Vận Hạn Năm ${d.targetYear}:</strong> Năm nay có sao Thái Dương chiếu mệnh mang lại cơ hội mở rộng quan hệ làm ăn, tài lộc khởi sắc vào tháng 4 và tháng 8 Âm lịch.</p>
+            `;
+        }
+
+        /* ================= GIEO QUẺ KINH DỊCH ================= */
+        const queList = [
+            { title: "Quẻ Số 01: Thuần Càn", tag: "Đại Cát", content: "Rồng bay trên trời. Thời cơ vàng đã đến, vạn sự hanh thông, công danh rực rỡ.", advice: "Hãy tự tin thực hiện các kế hoạch lớn đã chuẩn bị từ lâu." },
+            { title: "Quẻ Số 11: Địa Thiên Thái", tag: "Đại Cát", content: "Thái bình thịnh vượng. Âm dương hòa hợp, gia đạo an vui, tài lộc dồi dào.", advice: "Giữ vững sự tử tế, tiếp tục duy trì các mối quan hệ tốt đẹp." },
+            { title: "Quẻ Số 15: Địa Sơn Khiêm", tag: "Thượng Cát", content: "Khiêm tốn thụ hưởng phúc lộc. Lời nói ôn hòa giúp tránh được thị phi.", advice: "Lắng nghe ý kiến đồng nghiệp để đạt kết quả hoàn hảo nhất." },
+            { title: "Quẻ Số 24: Địa Lôi Phục", tag: "Trung Cát", content: "Thời kỳ hồi phục sau khó khăn. Năng lượng tích cực đang quay trở lại.", advice: "Nên khởi động nhẹ nhàng, không nên vội vã đầu tư lớn ngay." },
+            { title: "Quẻ Số 50: Hỏa Phong Đỉnh", tag: "Thượng Cát", content: "Đổi mới và thành công. Ý tưởng mới mang lại danh tiếng và lợi ích lớn.", advice: "Chủ động sáng tạo và mạnh dạn thay đổi phương pháp làm việc." }
+        ];
+
+        function gieoQueKinhDich() {
+            const c1 = document.getElementById('coin1');
+            const c2 = document.getElementById('coin2');
+            const c3 = document.getElementById('coin3');
+            const status = document.getElementById('queStatusText');
+            const resultBox = document.getElementById('queResultBox');
+
+            resultBox.classList.add('hidden');
+            status.innerText = "Đang xin quẻ Kinh Dịch linh ứng...";
+
+            c1.classList.add('animate-coin');
+            c2.classList.add('animate-coin');
+            c3.classList.add('animate-coin');
+
+            setTimeout(() => {
+                c1.classList.remove('animate-coin');
+                c2.classList.remove('animate-coin');
+                c3.classList.remove('animate-coin');
+
+                const randomQue = queList[Math.floor(Math.random() * queList.length)];
+                
+                document.getElementById('queTitle').innerText = randomQue.title;
+                document.getElementById('queTag').innerText = randomQue.tag;
+                document.getElementById('queContent').innerText = `Lời quẻ: ${randomQue.content}`;
+                document.getElementById('queAdvice').innerHTML = `<strong>Lời khuyên:</strong> ${randomQue.advice}`;
+
+                status.innerText = "Gieo quẻ thành công!";
+                resultBox.classList.remove('hidden');
+            }, 1200);
+        }
+
+        function quickRandomFortune() {
+            switchTab('boique');
+            gieoQueKinhDich();
+        }
+
+        /* ================= TRA CỨU PHONG THỦY ================= */
+        function lookupFengShui() {
+            const yearVal = document.getElementById('fengshuiYear').value;
+            const genderVal = document.getElementById('fengshuiGender').value;
+
+            if(!yearVal) {
+                showToast("Vui lòng chọn Năm Sinh để tra cứu Phong Thủy!");
+                document.getElementById('fengshuiYear').focus();
+                return;
+            }
+            if(!genderVal) {
+                showToast("Vui lòng chọn Giới Tính!");
+                document.getElementById('fengshuiGender').focus();
+                return;
+            }
+
+            const year = parseInt(yearVal);
+            const gender = genderVal;
+
+            const fengData = [
+                { phi: "Càn (Kim) - Tây Tứ Mệnh", hop: "Vàng, Trắng, Nâu", ky: "Đỏ, Tím, Hồng", numbers: "6, 7, 8" },
+                { phi: "Khôn (Thổ) - Tây Tứ Mệnh", hop: "Đỏ, Tím, Vàng, Nâu", ky: "Xanh Lá", numbers: "2, 5, 8, 9" },
+                { phi: "Chấn (Mộc) - Đông Tứ Mệnh", hop: "Xanh Lá, Xanh Dương, Đen", ky: "Trắng, Bạc", numbers: "1, 3, 4" },
+                { phi: "Tốn (Mộc) - Đông Tứ Mệnh", hop: "Xanh Lá, Xanh Dương", ky: "Trắng, Kim Loại", numbers: "3, 4, 9" },
+                { phi: "Kham (Thủy) - Đông Tứ Mệnh", hop: "Trắng, Xanh Dương, Đen", ky: "Vàng Đất", numbers: "1, 6" }
+            ];
+
+            const res = fengData[(year + (gender === 'nam' ? 1 : 0)) % fengData.length];
+            document.getElementById('fsCungPhi').innerText = res.phi;
+            document.getElementById('fsMauHop').innerText = res.hop;
+            document.getElementById('fsMauKy').innerText = res.ky;
+            document.getElementById('fsSoMayMan').innerText = res.numbers;
+
+            showToast("Tra cứu Phong Thủy thành công!", true);
+        }
+
+        /* ================= 12 CON GIÁP & ZODIAC ================= */
+        const zodiacData = [
+            { icon: "🐀", name: "Tuổi Tý (Chuột)", years: "1960, 1972, 1984, 1996, 2008, 2020", overview: "Năm 2026 mang lại nhiều vận may về sự nghiệp. Quý nhân phù trợ giúp công việc trôi chảy.", career: "Tài chính vươn lên mạnh mẽ, có thêm các nguồn thu nhập phụ.", love: "Gia đạo yên vui, người độc thân có cơ hội kết giao bạn đời.", health: "Chú ý giữ gìn cột sống và ăn uống đúng giờ." },
+            { icon: "🐂", name: "Tuổi Sửu (Trâu)", years: "1961, 1973, 1985, 1997, 2009, 2021", overview: "Sự kiên trì mang lại thành quả xứng đáng. Tháng 6 và tháng 10 lộc tài khởi sắc.", career: "Công việc ổn định, được cấp trên tin tưởng giao trọng trách mới.", love: "Tình cảm lứa đôi thắm thiết, biết nhường nhịn thấu hiểu.", health: "Tăng cường tập thể dục nâng cao sức đề kháng." },
+            { icon: "🐅", name: "Tuổi Dần (Hổ)", years: "1962, 1974, 1986, 1998, 2010, 2022", overview: "Năm nhiều đột phá bản lĩnh. Thích hợp mở rộng quy mô kinh doanh.", career: "Cơ hội thăng tiến lớn, hợp tác mở rộng thị trường.", love: "Cần dành nhiều thời gian hơn cho gia đình.", health: "Tránh đi xa vào các tháng hạn mùa hè." },
+            { icon: "🐇", name: "Tuổi Mão (Mèo)", years: "1963, 1975, 1987, 1999, 2011, 2023", overview: "Cát khí vây quanh, đời sống tinh thần và tài chính đều hân hoan.", career: "Lợi lộc hanh thông, công việc nghệ thuật sáng tạo bùng nổ.", love: "Tin vui kết hôn, sinh con trong năm.", health: "Sức khỏe dồi dào, tâm trí minh mẫn." }
+        ];
+
+        function renderZodiacGrid() {
+            const grid = document.getElementById('zodiacGrid');
+            grid.innerHTML = zodiacData.map((z, idx) => `
+                <button onclick="selectZodiac(${idx})" class="p-3 rounded-xl bg-oriental-darkbg border border-oriental-border hover:border-gold transition-all flex flex-col items-center space-y-1">
+                    <span class="text-2xl">${z.icon}</span>
+                    <span class="text-xs font-bold text-amber-200">${z.name.split(' ')[1]}</span>
+                </button>
+            `).join('');
+            selectZodiac(0);
+        }
+
+        function selectZodiac(idx) {
+            const z = zodiacData[idx];
+            document.getElementById('zodiacIcon').innerText = z.icon;
+            document.getElementById('zodiacName').innerText = z.name;
+            document.getElementById('zodiacYears').innerText = `Năm sinh: ${z.years}`;
+            document.getElementById('zodiacOverview').innerText = z.overview;
+            document.getElementById('zodiacCareer').innerText = z.career;
+            document.getElementById('zodiacLove').innerText = z.love;
+            document.getElementById('zodiacHealth').innerText = z.health;
+        }
+
+        function toggleZodiacMode(mode) {
+            document.getElementById('subnav-congiap').className = mode === 'congiap' ? 'px-3 py-1.5 rounded-lg bg-oriental-red text-gold font-bold' : 'px-3 py-1.5 rounded-lg text-gray-400';
+            document.getElementById('subnav-hoangdao').className = mode === 'hoangdao' ? 'px-3 py-1.5 rounded-lg bg-oriental-red text-gold font-bold' : 'px-3 py-1.5 rounded-lg text-gray-400';
+        }
+
+        /* ================= BÓI TÌNH DUYÊN ================= */
+        function checkLoveCompatibility(e) {
+            e.preventDefault();
+            const n1 = document.getElementById('loveName1').value.trim();
+            const n2 = document.getElementById('loveName2').value.trim();
+            const y1 = document.getElementById('loveYear1').value;
+            const y2 = document.getElementById('loveYear2').value;
+
+            if(!n1) {
+                showToast("Vui lòng nhập Họ tên người thứ nhất!");
+                document.getElementById('loveName1').focus();
+                return;
+            }
+            if(!y1) {
+                showToast("Vui lòng chọn Năm sinh người thứ nhất!");
+                document.getElementById('loveYear1').focus();
+                return;
+            }
+            if(!n2) {
+                showToast("Vui lòng nhập Họ tên người thứ hai!");
+                document.getElementById('loveName2').focus();
+                return;
+            }
+            if(!y2) {
+                showToast("Vui lòng chọn Năm sinh người thứ hai!");
+                document.getElementById('loveYear2').focus();
+                return;
+            }
+
+            document.getElementById('loveDisplayName1').innerText = n1;
+            document.getElementById('loveDisplayName2').innerText = n2;
+            document.getElementById('loveScore').innerText = "88%";
+            document.getElementById('loveResultCard').classList.remove('hidden');
+
+            showToast("Phân tích độ tương hợp thành công!", true);
+        }
+
+        /* ================= LỊCH ÂM DƯƠNG ================= */
+        function renderCalendar() {
+            const grid = document.getElementById('calendarDaysGrid');
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            document.getElementById('calendarCurrentMonthYear').innerText = `Tháng ${month + 1} / ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            let html = '';
+            // Empty slots
+            for(let i = 0; i < firstDay; i++) {
+                html += `<div class="h-12 bg-oriental-darkbg/30 rounded border border-transparent"></div>`;
+            }
+
+            for(let d = 1; d <= daysInMonth; d++) {
+                const isToday = (d === 15 && month === 9 && year === 2026);
+                html += `
+                    <button onclick="selectCalendarDay(${d})" class="h-12 p-1 rounded border ${isToday ? 'border-gold bg-oriental-red/50' : 'border-oriental-border bg-oriental-cardbg'} hover:border-gold flex flex-col justify-between text-left transition-all">
+                        <span class="font-bold text-amber-100 text-xs">${d}</span>
+                        <span class="text-[9px] text-gray-400 font-semibold self-end">${(d + 18) % 30 + 1} Âm</span>
+                    </button>
+                `;
+            }
+            grid.innerHTML = html;
+        }
+
+        function changeCalendarMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function selectCalendarDay(d) {
+            document.getElementById('selectedSolarDay').innerText = d;
+            document.getElementById('selectedDayFullInfo').innerText = `Ngày ${d}/${currentCalendarDate.getMonth() + 1}/${currentCalendarDate.getFullYear()}`;
+            document.getElementById('selectedLunarFullInfo').innerText = `Âm Lịch: Ngày ${(d + 18) % 30 + 1} Tháng 09`;
+        }
+
+        function shareChart() {
+            const dummy = document.createElement('input');
+            document.body.appendChild(dummy);
+            dummy.value = window.location.href;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            showToast("Đã sao chép liên kết lá số tử vi thành công!", true);
+        }
+    </script>
+</body>
+</html>
