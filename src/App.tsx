@@ -1,48 +1,50 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout';
+import { LearningProvider } from './hooks/useLearning';
 import {
   Dashboard,
   LearningPath,
   Courses,
+  CourseDetail,
   LessonPage,
   Vocabulary,
+  Achievements,
+  Stats,
+  Profile,
+  Settings,
 } from './pages';
-
-// Placeholder pages for remaining routes
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
-        <p className="text-gray-500">Trang đang được phát triển...</p>
-      </div>
-    </div>
-  );
-}
+import { ListeningPractice } from './features/listening/ListeningPractice';
+import { SpeakingPractice } from './features/speaking/SpeakingPractice';
+import { ReadingPractice } from './features/reading/ReadingPractice';
+import { WritingPractice } from './features/writing/WritingPractice';
+import { FlashcardDeck } from './features/vocabulary/FlashcardDeck';
+import { SpacedRepetitionReview } from './features/vocabulary/SpacedRepetitionReview';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="learning-path" element={<LearningPath />} />
-        <Route path="courses" element={<Courses />} />
-        <Route path="courses/:courseId" element={<PlaceholderPage title="Chi tiết khóa học" />} />
-        <Route path="lesson/:lessonId" element={<LessonPage />} />
-        <Route path="listening" element={<PlaceholderPage title="Luyện nghe" />} />
-        <Route path="speaking" element={<PlaceholderPage title="Luyện nói" />} />
-        <Route path="reading" element={<PlaceholderPage title="Luyện đọc" />} />
-        <Route path="writing" element={<PlaceholderPage title="Luyện viết" />} />
-        <Route path="vocabulary" element={<Vocabulary />} />
-        <Route path="flashcards" element={<PlaceholderPage title="Flashcards" />} />
-        <Route path="review" element={<PlaceholderPage title="Ôn tập" />} />
-        <Route path="achievements" element={<PlaceholderPage title="Thành tích" />} />
-        <Route path="stats" element={<PlaceholderPage title="Thống kê" />} />
-        <Route path="profile" element={<PlaceholderPage title="Hồ sơ" />} />
-        <Route path="settings" element={<PlaceholderPage title="Cài đặt" />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+    <LearningProvider>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="learning-path" element={<LearningPath />} />
+          <Route path="courses" element={<Courses />} />
+          <Route path="courses/:courseId" element={<CourseDetail />} />
+          <Route path="lesson/:lessonId" element={<LessonPage />} />
+          <Route path="listening" element={<ListeningPractice />} />
+          <Route path="speaking" element={<SpeakingPractice />} />
+          <Route path="reading" element={<ReadingPractice />} />
+          <Route path="writing" element={<WritingPractice />} />
+          <Route path="vocabulary" element={<Vocabulary />} />
+          <Route path="flashcards" element={<FlashcardDeck />} />
+          <Route path="review" element={<SpacedRepetitionReview />} />
+          <Route path="achievements" element={<Achievements />} />
+          <Route path="stats" element={<Stats />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </LearningProvider>
   );
 }
 

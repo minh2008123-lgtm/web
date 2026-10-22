@@ -1,38 +1,54 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Volume2,
   Search,
-  Filter,
   Book,
   CheckCircle,
   Clock,
   Sparkles,
-  ChevronLeft,
-  ChevronRight,
   Star,
+  Plus,
+  Repeat,
+  Brain,
 } from 'lucide-react';
-import { Card, Badge, Button, ProgressBar } from '../components/ui';
-import { vocabularyList } from '../data/coursesData';
-
-type FilterType = 'all' | 'new' | 'learning' | 'reviewing' | 'mastered';
+import { Card, Badge, Button } from '../components/ui';
+import { useLearning } from '../hooks/useLearning';
+import { speakText } from '../lib/audio';
+import { CEFRLevel, MasteryLevel } from '../types';
 
 export function Vocabulary() {
-  const [filter, setFilter] = useState<FilterType>('all');
+  const {
+    vocabulary,
+    accent,
+    setAccent,
+    addCustomVocabulary,
+    toggleFavoriteVocabulary,
+  } = useLearning();
+
+  const [filter, setFilter] = useState<'all' | MasteryLevel>('all');
+  const [levelFilter, setLevelFilter] = useState<'ALL' | CEFRLevel>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
-  const [currentCard, setCurrentCard] = useState(0);
-  const [flipped, setFlipped] = useState(false);
-  const [vocabulary, setVocabulary] = useState(vocabularyList);
+  const [showAddModal, setShowAddModal] = useState(false);
+
+  // Form thêm từ mới
+  const [newWord, setNewWord] = useState('');
+  const [newPhonetic, setNewPhonetic] = useState('');
+  const [newMeaning, setNewMeaning] = useState('');
+  const [newExample, setNewExample] = useState('');
+  const [newExampleMeaning, setNewExampleMeaning] = useState('');
+  const [newLevel, setNewLevel] = useState<CEFRLevel>('B1');
 
   const filteredVocab = vocabulary.filter((v) => {
-    const matchesFilter = filter === 'all' || v.mastery === filter;
+    const matchesMastery = filter === 'all' || v.mastery === filter;
+    const matchesLevel = levelFilter === 'ALL' || v.level === levelFilter;
     const matchesSearch =
       searchQuery === '' ||
       v.word.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.meaning.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch;
+      v.meaning.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      v.topic.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesMastery && matchesLevel && matchesSearch;
   });
-
-  const currentVocab = filteredVocab[currentCard];
 
   const stats = {
     total: vocabulary.length,
@@ -42,111 +58,180 @@ export function Vocabulary() {
     mastered: vocabulary.filter((v) => v.mastery === 'mastered').length,
   };
 
-  const handleNext = () => {
-    if (currentCard < filteredVocab.length - 1) {
-      setCurrentCard(currentCard + 1);
-      setFlipped(false);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentCard > 0) {
-      setCurrentCard(currentCard - 1);
-      setFlipped(false);
-    }
-  };
-
-  const handlePlayAudio = (word: string) => {
-    // Simulate audio playback
-    const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'en-US';
-    speechSynthesis.speak(utterance);
-  };
-
-  const getMasteryColor = (mastery: string) => {
-    switch (mastery) {
-      case 'new':
-        return 'bg-gray-100 text-gray-600';
-      case 'learning':
-        return 'bg-amber-100 text-amber-700';
-      case 'reviewing':
-        return 'bg-blue-100 text-blue-700';
-      case 'mastered':
-        return 'bg-success-100 text-success-700';
-      default:
-        return 'bg-gray-100 text-gray-600';
-    }
-  };
-
-  const getMasteryLabel = (mastery: string) => {
-    switch (mastery) {
-      case 'new':
-        return 'Mới';
-      case 'learning':
-        return 'Đang học';
-      case 'reviewing':
-        return 'Ôn tập';
-      case 'mastered':
-        return 'Đã thuộc';
-      default:
-        return mastery;
-    }
+  const handleCreateWord = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newWord.trim() || !newMeaning.trim()) return;
+    addCustomVocabulary({
+      word: newWord.trim(),
+      phonetic: newPhonetic.trim() || `/${newWord.trim().toLowerCase()}/`,
+      partOfSpeech: 'n',
+      level: newLevel,
+      topic: 'Personal Notebook',
+      meaning: newMeaning.trim(),
+      example: newExample.trim() || `I am learning the word ${newWord.trim()}.`,
+      exampleMeaning: newExampleMeaning.trim() || newMeaning.trim(),
+    });
+    setNewWord('');
+    setNewPhonetic('');
+    setNewMeaning('');
+    setNewExample('');
+    setNewExampleMeaning('');
+    setShowAddModal(false);
   };
 
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Kho Từ Vựng IPA & Ngữ Cảnh Song Ngữ
+          </h2>
+          <p className="text-gray-600 mt-1">
+            Tra cứu phiên âm chuẩn quốc tế IPA, nghe phát âm US/UK và quản lý thẻ nhớ SM-2.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex bg-gray-100 p-1 rounded-lg">
+            {(['en-US', 'en-GB'] as const).map((acc) => (
+              <button
+                key={acc}
+                onClick={() => setAccent(acc)}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium ${
+                  accent === acc ? 'bg-white text-primary-700 shadow-sm' : 'text-gray-600'
+                }`}
+              >
+                {acc === 'en-US' ? '🇺🇸 US' : '🇬🇧 UK'}
+              </button>
+            ))}
+          </div>
+
+          <Link
+            to="/flashcards"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-orange-50 text-orange-700 text-sm font-medium hover:bg-orange-100"
+          >
+            <Repeat size={16} /> Flashcards
+          </Link>
+          <Link
+            to="/review"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-cyan-50 text-cyan-700 text-sm font-medium hover:bg-cyan-100"
+          >
+            <Brain size={16} /> Ôn tập SM-2
+          </Link>
+          <Button size="sm" onClick={() => setShowAddModal(!showAddModal)}>
+            <Plus size={16} className="mr-1" /> Thêm từ mới
+          </Button>
+        </div>
+      </div>
+
+      {/* Add Word Modal / Collapsible Form */}
+      {showAddModal && (
+        <Card className="border-2 border-primary-200 bg-primary-50/40">
+          <h3 className="font-bold text-gray-900 mb-3">Thêm từ vựng mới vào Sổ tay SRS</h3>
+          <form onSubmit={handleCreateWord} className="grid sm:grid-cols-2 gap-4">
+            <input
+              type="text"
+              required
+              placeholder="Từ tiếng Anh (VD: resilient)"
+              value={newWord}
+              onChange={(e) => setNewWord(e.target.value)}
+              className="input-field bg-white text-sm"
+            />
+            <input
+              type="text"
+              placeholder="Phiên âm IPA (VD: /rɪˈzɪliənt/)"
+              value={newPhonetic}
+              onChange={(e) => setNewPhonetic(e.target.value)}
+              className="input-field bg-white text-sm font-mono"
+            />
+            <input
+              type="text"
+              required
+              placeholder="Nghĩa tiếng Việt (VD: kiên cường, bền bỉ)"
+              value={newMeaning}
+              onChange={(e) => setNewMeaning(e.target.value)}
+              className="input-field bg-white text-sm"
+            />
+            <select
+              value={newLevel}
+              onChange={(e) => setNewLevel(e.target.value as CEFRLevel)}
+              className="input-field bg-white text-sm"
+            >
+              <option value="A1">Cấp độ A1</option>
+              <option value="A2">Cấp độ A2</option>
+              <option value="B1">Cấp độ B1</option>
+              <option value="B2">Cấp độ B2</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Câu ví dụ tiếng Anh..."
+              value={newExample}
+              onChange={(e) => setNewExample(e.target.value)}
+              className="input-field bg-white text-sm sm:col-span-2"
+            />
+            <div className="sm:col-span-2 flex justify-end gap-2">
+              <Button type="button" variant="ghost" onClick={() => setShowAddModal(false)}>
+                Hủy
+              </Button>
+              <Button type="submit">Lưu vào bộ từ vựng</Button>
+            </div>
+          </form>
+        </Card>
+      )}
+
       {/* Header Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <Card className="text-center">
-          <Book className="mx-auto mb-2 text-primary-600" size={24} />
+        <Card className="text-center p-4">
+          <Book className="mx-auto mb-1.5 text-primary-600" size={22} />
           <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-          <p className="text-sm text-gray-500">Tổng số</p>
+          <p className="text-xs text-gray-500">Tổng số từ</p>
         </Card>
-        <Card className="text-center">
-          <Sparkles className="mx-auto mb-2 text-gray-400" size={24} />
+        <Card className="text-center p-4">
+          <Sparkles className="mx-auto mb-1.5 text-gray-400" size={22} />
           <p className="text-2xl font-bold text-gray-900">{stats.new}</p>
-          <p className="text-sm text-gray-500">Từ mới</p>
+          <p className="text-xs text-gray-500">Từ mới</p>
         </Card>
-        <Card className="text-center">
-          <Clock className="mx-auto mb-2 text-amber-500" size={24} />
+        <Card className="text-center p-4">
+          <Clock className="mx-auto mb-1.5 text-amber-500" size={22} />
           <p className="text-2xl font-bold text-gray-900">{stats.learning}</p>
-          <p className="text-sm text-gray-500">Đang học</p>
+          <p className="text-xs text-gray-500">Đang học</p>
         </Card>
-        <Card className="text-center">
-          <Star className="mx-auto mb-2 text-blue-500" size={24} />
+        <Card className="text-center p-4">
+          <Star className="mx-auto mb-1.5 text-blue-500" size={22} />
           <p className="text-2xl font-bold text-gray-900">{stats.reviewing}</p>
-          <p className="text-sm text-gray-500">Ôn tập</p>
+          <p className="text-xs text-gray-500">Đang ôn tập</p>
         </Card>
-        <Card className="text-center">
-          <CheckCircle className="mx-auto mb-2 text-success-500" size={24} />
+        <Card className="text-center p-4">
+          <CheckCircle className="mx-auto mb-1.5 text-success-500" size={22} />
           <p className="text-2xl font-bold text-gray-900">{stats.mastered}</p>
-          <p className="text-sm text-gray-500">Đã thuộc</p>
+          <p className="text-xs text-gray-500">Đã thuộc lòng</p>
         </Card>
       </div>
 
-      {/* Search & Filter */}
+      {/* Search & Filters */}
       <Card>
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <input
               type="text"
-              placeholder="Tìm kiếm từ vựng..."
+              placeholder="Tìm từ vựng, nghĩa tiếng Việt hoặc chủ đề..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-field pl-10"
+              className="input-field pl-10 text-sm"
             />
           </div>
-          <div className="flex gap-2 flex-wrap">
-            {(['all', 'new', 'learning', 'reviewing', 'mastered'] as FilterType[]).map((f) => (
+
+          <div className="flex flex-wrap gap-2">
+            {(['all', 'new', 'learning', 'reviewing', 'mastered'] as const).map((f) => (
               <button
                 key={f}
-                onClick={() => {
-                  setFilter(f);
-                  setCurrentCard(0);
-                  setFlipped(false);
-                }}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
+                onClick={() => setFilter(f)}
+                className={`px-3 py-2 rounded-lg font-medium text-xs transition-colors ${
                   filter === f
                     ? 'bg-primary-600 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -164,156 +249,90 @@ export function Vocabulary() {
               </button>
             ))}
           </div>
+
+          <div className="flex gap-1.5">
+            {(['ALL', 'A1', 'A2', 'B1', 'B2'] as const).map((lvl) => (
+              <button
+                key={lvl}
+                onClick={() => setLevelFilter(lvl)}
+                className={`px-2.5 py-2 rounded-lg text-xs font-semibold ${
+                  levelFilter === lvl
+                    ? 'bg-amber-500 text-white'
+                    : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {lvl}
+              </button>
+            ))}
+          </div>
         </div>
       </Card>
 
-      {/* Flashcard */}
-      {currentVocab ? (
-        <div className="max-w-2xl mx-auto">
-          <Card className="relative overflow-hidden">
-            {/* Progress */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100">
-              <div
-                className="h-full bg-primary-500 transition-all"
-                style={{
-                  width: `${((currentCard + 1) / filteredVocab.length) * 100}%`,
-                }}
-              />
-            </div>
-
-            {/* Card */}
-            <div
-              className="mt-4 min-h-[320px] cursor-pointer perspective-1000"
-              onClick={() => setFlipped(!flipped)}
-            >
-              <div
-                className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${
-                  flipped ? 'rotate-y-180' : ''
-                }`}
-              >
-                {/* Front */}
-                <div className="absolute inset-0 backface-hidden">
-                  <div className="h-full flex flex-col items-center justify-center p-8">
-                    <Badge className={`mb-4 ${getMasteryColor(currentVocab.mastery)}`}>
-                      {getMasteryLabel(currentVocab.mastery)}
-                    </Badge>
-
-                    <h2 className="text-4xl font-bold text-gray-900 mb-2">
-                      {currentVocab.word}
-                    </h2>
-
-                    <p className="text-lg text-gray-500 mb-6 font-mono">
-                      {currentVocab.phonetic}
-                    </p>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handlePlayAudio(currentVocab.word);
-                      }}
-                      className="p-3 bg-primary-50 rounded-full hover:bg-primary-100 transition-colors"
-                    >
-                      <Volume2 className="text-primary-600" size={24} />
-                    </button>
-
-                    <p className="mt-6 text-sm text-gray-400">Nhấn để xem nghĩa</p>
-                  </div>
+      {/* Vocabulary Cards Grid */}
+      <div className="grid md:grid-cols-2 gap-4">
+        {filteredVocab.map((v) => (
+          <Card key={v.id} className="flex flex-col justify-between">
+            <div>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-xl font-bold text-gray-900">{v.word}</h3>
+                  <span className="text-sm font-mono text-gray-500">{v.phonetic}</span>
+                  <Badge variant="primary" size="sm">
+                    {v.partOfSpeech}
+                  </Badge>
+                  <Badge variant="accent" size="sm">
+                    {v.level}
+                  </Badge>
                 </div>
 
-                {/* Back */}
-                <div className="absolute inset-0 backface-hidden rotate-y-180">
-                  <div className="h-full flex flex-col items-center justify-center p-8 bg-primary-50 rounded-xl">
-                    <h3 className="text-xl font-bold text-primary-700 mb-4">Nghĩa</h3>
-                    <p className="text-2xl font-semibold text-gray-900 mb-6">
-                      {currentVocab.meaning}
-                    </p>
-
-                    <div className="w-full bg-white rounded-xl p-4">
-                      <p className="text-sm text-gray-500 mb-1">Ví dụ</p>
-                      <p className="text-gray-700 italic mb-2">{currentVocab.example}</p>
-                      <p className="text-sm text-gray-500">{currentVocab.exampleMeaning}</p>
-                    </div>
-                  </div>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => speakText(v.word, { lang: accent })}
+                    className="p-2 rounded-full bg-primary-50 text-primary-600 hover:bg-primary-100"
+                    title="Nghe phát âm từ"
+                  >
+                    <Volume2 size={16} />
+                  </button>
+                  <button
+                    onClick={() => toggleFavoriteVocabulary(v.id)}
+                    className="p-2 rounded-full hover:bg-gray-100"
+                  >
+                    <Star
+                      size={16}
+                      className={
+                        v.isFavorite ? 'text-amber-400 fill-amber-400' : 'text-gray-300'
+                      }
+                    />
+                  </button>
                 </div>
+              </div>
+
+              <p className="text-base font-semibold text-primary-800 mt-2">{v.meaning}</p>
+
+              <div className="mt-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-800 italic">"{v.example}"</p>
+                  <button
+                    onClick={() => speakText(v.example, { lang: accent })}
+                    className="p-1 text-gray-400 hover:text-primary-600 flex-shrink-0 ml-2"
+                    title="Nghe câu ví dụ"
+                  >
+                    <Volume2 size={14} />
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">{v.exampleMeaning}</p>
               </div>
             </div>
 
-            {/* Navigation */}
-            <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
-              <button
-                onClick={handlePrev}
-                disabled={currentCard === 0}
-                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                <ChevronLeft size={20} />
-                Trước
-              </button>
-
-              <span className="text-sm text-gray-500">
-                {currentCard + 1} / {filteredVocab.length}
+            <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+              <span>Chủ đề: {v.topic}</span>
+              <span>
+                Chu kỳ SM-2: {v.interval} ngày • EF {v.easeFactor}
               </span>
-
-              <button
-                onClick={handleNext}
-                disabled={currentCard === filteredVocab.length - 1}
-                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Sau
-                <ChevronRight size={20} />
-              </button>
             </div>
           </Card>
-
-          {/* Vocabulary List */}
-          <Card className="mt-6">
-            <h3 className="font-bold text-gray-900 mb-4">Danh sách từ vựng</h3>
-            <div className="space-y-2">
-              {filteredVocab.map((v, index) => (
-                <button
-                  key={v.id}
-                  onClick={() => {
-                    setCurrentCard(index);
-                    setFlipped(false);
-                  }}
-                  className={`w-full flex items-center gap-4 p-3 rounded-lg text-left transition-colors ${
-                    index === currentCard
-                      ? 'bg-primary-50 border border-primary-200'
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <span className="text-sm text-gray-400 w-6">{index + 1}</span>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">{v.word}</p>
-                    <p className="text-sm text-gray-500">{v.meaning}</p>
-                  </div>
-                  <Badge className={`${getMasteryColor(v.mastery)}`} size="sm">
-                    {getMasteryLabel(v.mastery)}
-                  </Badge>
-                </button>
-              ))}
-            </div>
-          </Card>
-        </div>
-      ) : (
-        <Card className="text-center py-12">
-          <p className="text-gray-500">Không tìm thấy từ vựng phù hợp</p>
-        </Card>
-      )}
-
-      <style>{`
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-        .transform-style-preserve-3d {
-          transform-style: preserve-3d;
-        }
-        .backface-hidden {
-          backface-visibility: hidden;
-        }
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
-      `}</style>
+        ))}
+      </div>
     </div>
   );
 }

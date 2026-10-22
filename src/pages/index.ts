@@ -1,5 +1,10 @@
 export { Dashboard } from './Dashboard';
 export { LearningPath } from './LearningPath';
 export { Courses } from './Courses';
+export { CourseDetail } from './CourseDetail';
 export { LessonPage } from './LessonPage';
 export { Vocabulary } from './Vocabulary';
+export { Achievements } from './Achievements';
+export { Stats } from './Stats';
+export { Profile } from './Profile';
+export { Settings } from './Settings';
