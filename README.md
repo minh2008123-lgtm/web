@@ -1,77 +1,45 @@
-# 🚀 LinguaQuest — Giai đoạn 2: Xây dựng Chức năng Học tập Toàn diện (4 Kỹ năng + SRS SM-2)
+# 🚀 LinguaQuest — Giai đoạn 3: Tích hợp Supabase (PostgreSQL, Auth, RLS & Anti-Duplicate XP)
 
-Nền tảng học tiếng Anh 4 kỹ năng (**Listening, Speaking, Reading, Writing**) kết hợp **Từ vựng IPA**, **Flashcards 3D**, **Thuật toán ôn tập lặp lại ngắt quãng SuperMemo SM-2** và **Hệ thống đề xuất bài học thông minh (Adaptive Recommendation Engine)**.
-
----
-
-## ✨ Các chức năng đã hoàn thiện trong Giai đoạn 2
-
-1. **Luyện Nghe tương tác (`src/features/listening/ListeningPractice.tsx`)**:
-   - Trình phát âm thanh hội thoại tích hợp **Web Speech API** (tùy chỉnh giọng Mỹ `en-US` / giọng Anh `en-GB`, tốc độ `0.75x`, `1.0x`, `1.25x`, thanh thời gian tua nhanh).
-   - **Interactive Transcript**: tự động tô sáng câu đang phát, nhấn vào từng lời thoại để nghe lại câu đó, bật/tắt bản dịch song ngữ, chế độ **Nghe mù (Blind Listening)**, bấm vào từ khóa gạch chân để xem phiên âm IPA + lưu trực tiếp vào bộ Flashcards SM-2.
-   - Bài tập kiểm tra nghe hiểu (Multiple Choice, Điền từ, Đúng/Sai) chấm điểm tức thì kèm giải thích chi tiết.
-
-2. **Luyện Nói & Ghi âm giọng nói (`src/features/speaking/SpeakingPractice.tsx`)**:
-   - Thu âm thực tế qua trình duyệt với `navigator.mediaDevices.getUserMedia` & `MediaRecorder` (kèm biểu đồ sóng âm và trình phát nghe lại bản thu của chính mình; hỗ trợ chế độ mô phỏng minh bạch nếu thiết bị không có micro).
-   - Nghe câu mẫu chuẩn (1.0x) và tốc độ chậm (0.75x), hướng dẫn trọng âm & nối âm (Phonetic Tips), chấm điểm độ khớp từng từ (Word-by-word match).
-
-3. **Luyện Đọc chuyên sâu (`src/features/reading/ReadingPractice.tsx`)**:
-   - Bài đọc phân đoạn theo chuẩn CEFR (A1–B2), bộ đếm số từ và thời gian đọc, bật/tắt dịch nghĩa từng đoạn.
-   - **Từ điển ngữ cảnh (Clickable Glossary)**: tra nghĩa, từ loại, phiên âm IPA và lưu từ mới vào hàng đợi ôn tập SM-2.
-   - Câu hỏi đọc hiểu đa dạng kèm nút **"Tô sáng Đoạn dẫn chứng"** giúp đối chiếu vị trí thông tin trong bài đọc.
-
-4. **Luyện Viết & Quản lý Bản nháp (`src/features/writing/WritingPractice.tsx`)**:
-   - Đề bài viết theo cấp độ CEFR kèm dàn ý gợi ý (**Outline**) và các cụm từ ăn điểm (**Useful Phrases** — bấm để chèn trực tiếp vào trình soạn thảo).
-   - Bộ đếm số từ, số câu theo thời gian thực; **Lưu bản nháp (`localStorage`)**, khôi phục hoặc xóa lịch sử bản nháp.
-   - Chấm điểm định lượng khách quan (độ dài, độ đa dạng từ vựng, số cụm từ gợi ý đã dùng, dấu câu/viết hoa) kết hợp **Checklist tự đánh giá theo 4 tiêu chí Rubric** và đối chiếu **Bài mẫu (Model Answer)**.
-
-5. **Từ vựng IPA, Flashcards 3D & Thuật toán Spaced Repetition SM-2 (`src/lib/srs.ts`, `src/features/vocabulary/`)**:
-   - Kho từ vựng có phiên âm IPA, từ loại, cấp độ CEFR, nghĩa tiếng Việt, câu ví dụ song ngữ, nút phát âm từ & câu ví dụ, và form thêm từ vựng cá nhân.
-   - **Thuật toán SuperMemo SM-2**: tính toán chính xác `repetitions`, `easeFactor` (EF), `interval` (số ngày) và `nextReviewDate` với 4 mức đánh giá: **1. Quên (Again)**, **2. Khó (Hard)**, **3. Tốt (Good)**, **4. Dễ (Easy)**.
-   - Trang **Ôn tập SM-2 (`/review`)** gồm Hàng đợi từ vựng đến hạn hôm nay và **Quiz Phản xạ Từ vựng**.
-
-6. **Theo dõi tiến độ từng kỹ năng & Đề xuất bài học thông minh (`src/services/recommendationService.ts`)**:
-   - Tự động phân tích kỹ năng có tiến độ/độ chính xác thấp nhất, bài học đạt điểm dưới 80% gần đây và số thẻ từ vựng đến hạn ôn tập SM-2 để đề xuất bài học ưu tiên trên Dashboard và sau mỗi bài tập.
+Nền tảng học tiếng Anh 4 kỹ năng (**Listening, Speaking, Reading, Writing**) tích hợp **Supabase Auth & PostgreSQL**, **Row Level Security (RLS)** và cơ chế **Chống cộng XP trùng lặp (`xp_transactions` + `idempotency_key`)**.
 
 ---
 
-## 📂 Cấu trúc thư mục dự án
+## ✨ Các hạng mục hoàn thiện trong Giai đoạn 3
 
-```
-lingua-quest/
-├── src/
-│   ├── components/
-│   │   ├── layout/          # Sidebar, Header (kèm thông báo & bộ đếm SRS), Layout
-│   │   └── ui/              # Card, Button, Badge, ProgressBar, StatCard
-│   ├── features/
-│   │   ├── listening/       # ListeningPractice (Audio + Interactive Transcript)
-│   │   ├── speaking/        # SpeakingPractice (MediaRecorder + Word Match)
-│   │   ├── reading/         # ReadingPractice (Segmented Passage + Glossary)
-│   │   ├── writing/         # WritingPractice (Editor + Drafts + Rubric)
-│   │   └── vocabulary/      # FlashcardDeck + SpacedRepetitionReview (SM-2)
-│   ├── pages/               # Dashboard, LearningPath, Courses, CourseDetail, LessonPage, Vocabulary, Achievements, Stats, Profile, Settings
-│   ├── hooks/               # useLearning (Context quản lý toàn bộ trạng thái học tập)
-│   ├── services/            # storageService, recommendationService
-│   ├── lib/                 # srs.ts (SM-2), audio.ts (Web Speech/Audio), scoring.ts
-│   ├── data/                # coursesData.ts, userData.ts
-│   └── types/               # index.ts (TypeScript interfaces)
-├── package.json
-├── vite.config.ts
-├── tailwind.config.js
-└── README.md
-```
+1. **Thiết kế Cơ sở dữ liệu PostgreSQL (`supabase/schema.sql` & `supabase/seed.sql`)**:
+   - Đầy đủ **16 bảng chuẩn hóa**: `profiles`, `courses`, `enrollments`, `lessons`, `exercises`, `questions`, `options`, `lesson_progress`, `attempts`, `vocabulary`, `user_vocabulary`, `xp_transactions`, `daily_activity`, cùng 3 bảng bổ sung `writing_submissions`, `badges`, `user_badges`.
+   - Đầy đủ khóa ngoại (`FOREIGN KEY ... ON DELETE CASCADE`), ràng buộc toàn vẹn (`CHECK`, `UNIQUE`) và **10 chỉ mục (`CREATE INDEX`)** tối ưu truy vấn.
+   - **Row Level Security (RLS)**: bật trên toàn bộ 16 bảng. Các bảng danh mục học liệu cho phép `SELECT` công khai; các bảng dữ liệu người dùng bắt buộc `auth.uid() = user_id` (hoặc `auth.uid() = id`).
+   - **Chống cộng XP trùng lặp (Anti-Duplicate XP)**:
+     - Bảng `xp_transactions` có ràng buộc `UNIQUE (user_id, idempotency_key)`.
+     - Hàm PostgreSQL RPC `public.submit_lesson_attempt(...)` chỉ cộng XP đầy đủ ở lần hoàn thành đầu tiên; khi người dùng làm lại bài cũ, hệ thống chỉ cộng phần XP chênh lệch nếu vượt kỷ lục `best_score` trước đó.
+
+2. **Tích hợp Supabase Client, Auth & Bảo mật Frontend**:
+   - `src/lib/supabase.ts`: khởi tạo Supabase Client từ `VITE_SUPABASE_URL` và `VITE_SUPABASE_ANON_KEY`, tích hợp bộ kiểm tra tự động chặn việc vô tình đưa `service_role` key vào Frontend.
+   - `src/pages/AuthPage.tsx` (`/auth`): hỗ trợ **Đăng nhập**, **Đăng ký**, **Đăng xuất**, **Chuyển đổi nhanh nhiều tài khoản mẫu**, xem trực tiếp **Sổ cái `xp_transactions`** và bảng **16 Bảng & RLS Policies**.
+   - Tự động hoạt động mượt mà ở cả 2 chế độ: **Supabase Cloud Mode** (khi đã cấu hình `.env.local`) và **Local Emulator Mode** (khi chạy thử chưa cần tạo project Supabase).
 
 ---
 
-## 🛠️ Hướng dẫn cài đặt và chạy dự án
+## 🛠️ Hướng dẫn thiết lập Supabase & Chạy dự án
 
+### Bước 1: Cài đặt thư viện
 ```bash
-# 1. Cài đặt dependencies
 npm install
+```
 
-# 2. Chạy môi trường phát triển (Local Dev Server)
+### Bước 2: Khởi tạo Database trên Supabase (Tùy chọn — Ứng dụng vẫn chạy ngay cả khi chưa cấu hình `.env.local`)
+1. Tạo project mới tại [supabase.com](https://supabase.com).
+2. Mở **SQL Editor** → **New Query**:
+   - Dán toàn bộ nội dung file `supabase/schema.sql` và nhấn **Run** để tạo 16 bảng, Indexes, RLS Policies, Trigger và RPC Function.
+   - Tiếp tục dán nội dung file `supabase/seed.sql` và nhấn **Run** để nạp dữ liệu khóa học CEFR A1–B2, câu hỏi và từ vựng.
+3. Sao chép file `.env.example` thành `.env.local` và điền thông tin từ **Project Settings → API** (chỉ dùng `anon` public key, tuyệt đối không dùng `service_role` key):
+```env
+VITE_SUPABASE_URL=https://your-project-id.supabase.co
+VITE_SUPABASE_ANON_KEY=your-public-anon-key
+```
+
+### Bước 3: Chạy dự án
+```bash
 npm run dev
-
-# 3. Kiểm tra build production
-npm run build
 ```

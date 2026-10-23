@@ -17,6 +17,7 @@ import {
   X,
   Flame,
   Brain,
+  Database,
 } from 'lucide-react';
 import { useLearning } from '../../hooks/useLearning';
 
@@ -45,6 +46,7 @@ const practiceItems = [
 ];
 
 const otherItems = [
+  { path: '/auth', icon: Database, label: 'Auth & Supabase DB', color: 'text-emerald-600' },
   { path: '/achievements', icon: Trophy, label: 'Thành tích', color: 'text-yellow-600' },
   { path: '/stats', icon: BarChart3, label: 'Thống kê', color: 'text-indigo-600' },
   { path: '/profile', icon: UserIcon, label: 'Hồ sơ', color: 'text-gray-600' },
@@ -52,7 +54,7 @@ const otherItems = [
 ];
 
 export function Sidebar({ isOpen, onToggle }: SidebarProps) {
-  const { user, stats, dueVocabulary } = useLearning();
+  const { user, stats, dueVocabulary, isAuthenticated } = useLearning();
 
   const NavItem = ({
     path,
@@ -142,7 +144,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
             <div>
               <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                4 Kỹ năng (Giai đoạn 2)
+                4 Kỹ năng
               </h3>
               <div className="space-y-1">
                 {skillItems.map((item) => (
@@ -168,7 +170,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
             <div>
               <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                Cá nhân
+                Tài khoản & Hệ thống
               </h3>
               <div className="space-y-1">
                 {otherItems.map((item) => (
@@ -184,7 +186,9 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
                 {user.fullName.slice(0, 1).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900 truncate text-sm">{user.fullName}</p>
+                <p className="font-medium text-gray-900 truncate text-sm">
+                  {isAuthenticated ? user.fullName : 'Khách (Chưa đăng nhập)'}
+                </p>
                 <p className="text-xs text-gray-500">
                   Level {stats.level} • {stats.totalXP.toLocaleString()} XP
                 </p>

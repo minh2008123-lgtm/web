@@ -7,6 +7,7 @@ import {
   DailyActivity,
   AttemptResult,
   WritingDraft,
+  XPTransaction,
 } from '../types';
 
 export const currentUser: User = {
@@ -20,6 +21,21 @@ export const currentUser: User = {
   targetLevel: 'B2',
   dailyGoalMinutes: 20,
 };
+
+export const demoAccounts: User[] = [
+  currentUser,
+  {
+    id: 'user-002',
+    email: 'tran.minh.anh@selflearner.vn',
+    fullName: 'Trần Minh Anh',
+    level: 5,
+    xp: 890,
+    streak: 3,
+    joinedAt: '2026-10-10',
+    targetLevel: 'B1',
+    dailyGoalMinutes: 30,
+  },
+];
 
 export const userStats: UserStats = {
   totalXP: 2450,
@@ -171,7 +187,7 @@ export const initialAttempts: AttemptResult[] = [
     score: 90,
     correctAnswers: 4,
     totalQuestions: 4,
-    xpEarned: 30,
+    xpEarned: 27,
     timeSpent: 320,
     completedAt: '2026-10-20',
   },
@@ -180,10 +196,10 @@ export const initialAttempts: AttemptResult[] = [
     lessonId: 'lesson-a1-2',
     lessonTitle: 'Numbers, Time & Counting',
     skill: 'listening',
-    score: 75,
+    score: 85,
     correctAnswers: 2,
     totalQuestions: 3,
-    xpEarned: 20,
+    xpEarned: 21,
     timeSpent: 280,
     completedAt: '2026-10-21',
   },
@@ -192,12 +208,45 @@ export const initialAttempts: AttemptResult[] = [
     lessonId: 'lesson-a1-3',
     lessonTitle: 'Daily Routines & Habits',
     skill: 'reading',
-    score: 85,
+    score: 80,
     correctAnswers: 3,
     totalQuestions: 3,
-    xpEarned: 35,
+    xpEarned: 28,
     timeSpent: 410,
     completedAt: '2026-10-22',
+  },
+];
+
+export const initialXPTransactions: XPTransaction[] = [
+  {
+    id: 'xptx-1',
+    userId: 'user-001',
+    sourceType: 'lesson_complete',
+    sourceId: 'lesson-a1-1',
+    idempotencyKey: 'lesson_first:lesson-a1-1',
+    xpAmount: 27,
+    note: 'Hoàn thành lần đầu bài Greetings & Introductions (90%)',
+    createdAt: '20/10/2026 09:15',
+  },
+  {
+    id: 'xptx-2',
+    userId: 'user-001',
+    sourceType: 'lesson_complete',
+    sourceId: 'lesson-a1-2',
+    idempotencyKey: 'lesson_first:lesson-a1-2',
+    xpAmount: 21,
+    note: 'Hoàn thành lần đầu bài Numbers, Time & Counting (85%)',
+    createdAt: '21/10/2026 14:20',
+  },
+  {
+    id: 'xptx-3',
+    userId: 'user-001',
+    sourceType: 'lesson_complete',
+    sourceId: 'lesson-a1-3',
+    idempotencyKey: 'lesson_first:lesson-a1-3',
+    xpAmount: 28,
+    note: 'Hoàn thành lần đầu bài Daily Routines & Habits (80%)',
+    createdAt: '22/10/2026 19:45',
   },
 ];
 

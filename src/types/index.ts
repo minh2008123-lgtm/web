@@ -37,6 +37,16 @@ export interface Course {
   skills: Skill[];
 }
 
+export interface Enrollment {
+  id: string;
+  userId: string;
+  courseId: string;
+  completedLessons: number;
+  progressPercent: number;
+  enrolledAt: string;
+  lastAccessedAt: string;
+}
+
 export type ExerciseQuestionType =
   | 'multiple-choice'
   | 'fill-blank'
@@ -63,6 +73,8 @@ export interface Lesson {
   isCompleted: boolean;
   order: number;
   bestScore?: number;
+  xpClaimed?: number;
+  attemptsCount?: number;
 }
 
 export interface Option {
@@ -225,7 +237,27 @@ export interface Vocabulary {
   isFavorite?: boolean;
 }
 
-// 6. Progress, Gamification & Recommendations
+// 6. Progress, Gamification, XP Transactions & Recommendations (Phase 3)
+export type XPSourceType =
+  | 'lesson_complete'
+  | 'lesson_improvement'
+  | 'srs_review'
+  | 'skill_practice'
+  | 'writing_submit'
+  | 'daily_task'
+  | 'achievement';
+
+export interface XPTransaction {
+  id: string;
+  userId: string;
+  sourceType: XPSourceType;
+  sourceId: string;
+  idempotencyKey: string;
+  xpAmount: number;
+  note: string;
+  createdAt: string;
+}
+
 export interface DailyTask {
   id: string;
   title: string;
@@ -279,6 +311,7 @@ export interface AttemptResult {
   correctAnswers: number;
   totalQuestions: number;
   xpEarned: number;
+  duplicatePrevented?: boolean;
   timeSpent: number; // seconds
   completedAt: string;
 }

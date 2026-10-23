@@ -1,4 +1,4 @@
-import { Bell, Flame, Zap, Brain } from 'lucide-react';
+import { Bell, Flame, Zap, Brain, Database } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { useLearning } from '../../hooks/useLearning';
 
@@ -17,11 +17,20 @@ const pageTitles: Record<string, string> = {
   '/stats': 'Thống kê tiến bộ',
   '/profile': 'Hồ sơ cá nhân',
   '/settings': 'Cài đặt',
+  '/auth': 'Tài khoản & Supabase (Giai đoạn 3)',
 };
 
 export function Header() {
   const location = useLocation();
-  const { user, stats, dueVocabulary, notification, clearNotification } = useLearning();
+  const {
+    user,
+    isAuthenticated,
+    isSupabaseConnected,
+    stats,
+    dueVocabulary,
+    notification,
+    clearNotification,
+  } = useLearning();
   const title = pageTitles[location.pathname] || 'LinguaQuest';
 
   return (
@@ -30,11 +39,26 @@ export function Header() {
         <div>
           <h1 className="text-xl font-bold text-gray-900">{title}</h1>
           <p className="text-xs text-gray-500">
-            Mục tiêu: CEFR {user.targetLevel || 'B2'} • {user.dailyGoalMinutes || 20} phút/ngày
+            {isAuthenticated
+              ? `Học viên: ${user.fullName} • Mục tiêu CEFR ${user.targetLevel || 'B2'}`
+              : 'Chưa đăng nhập — Nhấn vào nút Tài khoản để đăng nhập'}
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          {/* Supabase & Auth Link */}
+          <Link
+            to="/auth"
+            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
+              isSupabaseConnected
+                ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
+            }`}
+          >
+            <Database size={14} />
+            <span>{isSupabaseConnected ? 'Supabase Live' : 'Auth & DB'}</span>
+          </Link>
+
           {/* Due SRS Shortcut */}
           <Link
             to="/review"
@@ -72,15 +96,15 @@ export function Header() {
 
           {/* Avatar */}
           <Link
-            to="/profile"
+            to="/auth"
             className="w-9 h-9 rounded-full bg-primary-600 text-white font-bold text-sm flex items-center justify-center"
+            title="Quản lý Tài khoản & Đăng nhập"
           >
             {user.fullName.slice(0, 1).toUpperCase()}
           </Link>
         </div>
       </div>
 
-      {/* Live Toast Notification */}
       {notification && (
         <div className="bg-emerald-600 text-white px-6 py-2 text-xs font-medium flex items-center justify-between">
           <span>✨ {notification}</span>

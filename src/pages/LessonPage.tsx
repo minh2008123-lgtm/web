@@ -14,6 +14,7 @@ import {
   Home,
   RotateCcw,
   Sparkles,
+  ShieldCheck,
 } from 'lucide-react';
 import { Card, Badge, Button, ProgressBar } from '../components/ui';
 import { exercises } from '../data/coursesData';
@@ -36,6 +37,7 @@ export function LessonPage() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [quizComplete, setQuizComplete] = useState(false);
   const [earnedXPState, setEarnedXPState] = useState(0);
+  const [duplicatePreventedState, setDuplicatePreventedState] = useState(false);
   const [startTime] = useState<number>(Date.now());
 
   const currentExercise = lessonExercises[currentQuestion];
@@ -73,14 +75,15 @@ export function LessonPage() {
       const finalScore =
         totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
       const elapsedSeconds = Math.max(15, Math.round((Date.now() - startTime) / 1000));
-      const awarded = completeLessonAttempt({
+      const res = completeLessonAttempt({
         lessonId: lesson.id,
         score: finalScore,
         correctAnswers: correctCount,
         totalQuestions,
         timeSpent: elapsedSeconds,
       });
-      setEarnedXPState(awarded);
+      setEarnedXPState(res.xpEarned);
+      setDuplicatePreventedState(res.duplicatePrevented);
       setQuizComplete(true);
     }
   };
@@ -132,9 +135,21 @@ export function LessonPage() {
               <p className="text-3xl font-bold text-accent-500 font-mono">
                 +{earnedXPState} XP
               </p>
-              <p className="text-xs text-gray-500">Điểm kinh nghiệm</p>
+              <p className="text-xs text-gray-500">XP nhận thêm</p>
             </div>
           </div>
+
+          {duplicatePreventedState && (
+            <div className="mb-6 p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-left flex items-start gap-3">
+              <ShieldCheck size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
+              <div className="text-xs text-amber-900">
+                <p className="font-bold">Chốt chặn chống cộng XP trùng lặp (Anti-Duplicate XP)</p>
+                <p className="mt-0.5">
+                  Lượt làm bài đã được ghi vào bảng <code>attempts</code>, nhưng hệ thống không cộng lặp XP vì bài học này đã nhận đủ XP ở kỷ lục trước ({lesson.bestScore}%). Bạn sẽ nhận thêm XP nếu phá kỷ lục điểm số cao hơn!
+                </p>
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-3">
             <Button onClick={handleRetry} variant="secondary" fullWidth>
@@ -148,7 +163,6 @@ export function LessonPage() {
           </div>
         </Card>
 
-        {/* Adaptive Next Step Recommendation */}
         {recommendations.length > 0 && (
           <Card className="bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200">
             <div className="flex items-center gap-2 mb-2">
@@ -174,7 +188,6 @@ export function LessonPage() {
           </Card>
         )}
 
-        {/* Detailed Answer Review */}
         <Card>
           <h3 className="font-bold text-gray-900 mb-4">
             Chi tiết đáp án & Giải thích chuyên sâu
@@ -227,7 +240,6 @@ export function LessonPage() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <button
           onClick={() => navigate(-1)}
@@ -237,16 +249,18 @@ export function LessonPage() {
           <span>Quay lại</span>
         </button>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {lesson.isCompleted && (
+            <Badge variant="success">Đã hoàn thành (Kỷ lục: {lesson.bestScore || 80}%)</Badge>
+          )}
           <div className="flex items-center gap-1.5 text-sm text-gray-500">
             <Clock size={16} />
             <span>{lesson.duration} phút</span>
           </div>
-          <Badge variant="primary">+{lesson.xpReward} XP</Badge>
+          <Badge variant="primary">Tối đa +{lesson.xpReward} XP</Badge>
         </div>
       </div>
 
-      {/* Progress */}
       <div className="mb-6">
         <div className="flex justify-between text-sm mb-2">
           <span className="text-gray-600">
@@ -264,7 +278,6 @@ export function LessonPage() {
         />
       </div>
 
-      {/* Question Card */}
       <Card className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -300,7 +313,6 @@ export function LessonPage() {
           </button>
         )}
 
-        {/* 1. Multiple Choice & True/False */}
         {(currentExercise.type === 'multiple-choice' ||
           currentExercise.type === 'true-false') && (
           <div className="space-y-3">
@@ -344,7 +356,6 @@ export function LessonPage() {
           </div>
         )}
 
-        {/* 2. Fill in the Blank */}
         {currentExercise.type === 'fill-blank' && (
           <div className="space-y-3">
             {currentExercise.promptHint && (
@@ -368,7 +379,6 @@ export function LessonPage() {
           </div>
         )}
 
-        {/* 3. Sentence Ordering */}
         {currentExercise.type === 'sentence-order' && (
           <div className="space-y-4">
             <div className="min-h-[60px] p-4 rounded-xl bg-gray-50 border-2 border-dashed border-gray-300 flex flex-wrap gap-2 items-center">
@@ -422,7 +432,6 @@ export function LessonPage() {
           </div>
         )}
 
-        {/* Explanation Box */}
         {showResult && (
           <div
             className={`mt-6 p-4 rounded-xl border ${
@@ -443,7 +452,6 @@ export function LessonPage() {
           </div>
         )}
 
-        {/* Actions */}
         <div className="mt-6 flex justify-end">
           {!showResult ? (
             <Button onClick={handleCheckAnswer} disabled={!currentAnswerValue.trim()}>
@@ -457,7 +465,7 @@ export function LessonPage() {
                   <ChevronRight size={18} className="ml-1" />
                 </>
               ) : (
-                'Hoàn thành & Nhận XP'
+                'Hoàn thành & Lưu kết quả'
               )}
             </Button>
           )}

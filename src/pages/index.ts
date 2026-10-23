@@ -8,3 +8,4 @@ export { Achievements } from './Achievements';
 export { Stats } from './Stats';
 export { Profile } from './Profile';
 export { Settings } from './Settings';
+export { AuthPage } from './AuthPage';
