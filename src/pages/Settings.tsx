@@ -71,7 +71,7 @@ export function Settings() {
             variant="secondary"
             onClick={() =>
               speakText(
-                'Welcome to LinguaQuest Phase 2! Your audio settings are working properly.',
+                'Welcome to LinguaQuest! Your audio settings are working properly.',
                 { lang: accent, rate: speechRate }
               )
             }
@@ -84,14 +84,14 @@ export function Settings() {
       <Card className="space-y-4">
         <div className="flex items-center gap-2">
           <ShieldCheck className="text-emerald-600" size={20} />
-          <h3 className="font-bold text-gray-900">Quản lý Dữ liệu Học tập (LocalStorage)</h3>
+          <h3 className="font-bold text-gray-900">Quản trị Dữ liệu Học tập</h3>
         </div>
         <p className="text-sm text-gray-600">
-          Nếu bạn muốn đặt lại toàn bộ điểm XP, trạng thái bài học, chu kỳ thẻ nhớ SM-2 và bản nháp bài viết về dữ liệu mẫu ban đầu của Giai đoạn 2, hãy nhấn nút bên dưới.
+          Nếu bạn muốn đặt lại toàn bộ điểm XP, trạng thái bài học, chu kỳ thẻ nhớ SM-2 và bản nháp bài viết về dữ liệu ban đầu, hãy nhấn nút bên dưới.
         </p>
         <div>
           <Button variant="danger" onClick={resetDemoState}>
-            <RotateCcw size={16} className="mr-1.5" /> Khôi phục dữ liệu mẫu ban đầu
+            <RotateCcw size={16} className="mr-1.5" /> Đặt lại dữ liệu học tập
           </Button>
         </div>
       </Card>

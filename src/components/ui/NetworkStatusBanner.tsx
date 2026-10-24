@@ -49,7 +49,7 @@ export const NetworkStatusBanner: React.FC = () => {
       ) : (
         <>
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>Đã khôi phục kết nối mạng! Dữ liệu đã sẵn sàng đồng bộ với Supabase.</span>
+          <span>Đã khôi phục kết nối mạng! Bạn có thể tiếp tục học tập bình thường.</span>
         </>
       )}
     </div>

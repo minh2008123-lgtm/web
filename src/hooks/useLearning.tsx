@@ -24,6 +24,7 @@ import {
   currentUser as initialUser,
   demoAccounts,
   userStats as initialStats,
+  createDefaultStats,
   dailyTasks as initialTasks,
   initialAttempts,
   initialWritingDrafts,
@@ -31,7 +32,14 @@ import {
 } from '../data/userData';
 import { calculateSM2, getDueVocabulary } from '../lib/srs';
 import { VoiceAccent, playFeedbackTone } from '../lib/audio';
-import { loadPersistedState, savePersistedState, clearPersistedState } from '../services/storageService';
+import {
+  loadPersistedState,
+  savePersistedState,
+  clearPersistedState,
+  getStoredAccounts,
+  saveStoredAccount,
+  findStoredAccount,
+} from '../services/storageService';
 import { generateRecommendations } from '../services/recommendationService';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import {
@@ -108,9 +116,21 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const [user, setUser] = useState<User>(persisted.user);
+  // Chuẩn hóa Level và XP: Level luôn = Math.max(1, Math.floor(XP / 200) + 1). Mặc định tài khoản mới luôn là Level 1 (0 XP)
+  const initialXP = persisted.stats?.totalXP ?? persisted.user?.xp ?? 0;
+  const initialCalculatedLevel = Math.max(1, Math.floor(initialXP / 200) + 1);
+
+  const [user, setUser] = useState<User>(() => ({
+    ...persisted.user,
+    xp: initialXP,
+    level: initialCalculatedLevel,
+  }));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(persisted.isAuthenticated);
-  const [stats, setStats] = useState<UserStats>(persisted.stats);
+  const [stats, setStats] = useState<UserStats>(() => ({
+    ...persisted.stats,
+    totalXP: initialXP,
+    level: initialCalculatedLevel,
+  }));
   const [courses, setCourses] = useState<Course[]>(persisted.courses);
   const [lessons, setLessons] = useState<Lesson[]>(persisted.lessons);
   const [vocabulary, setVocabulary] = useState<Vocabulary[]>(persisted.vocabulary);
@@ -170,6 +190,13 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
       accent,
       speechRate,
     });
+
+    if (user.email && isAuthenticated) {
+      saveStoredAccount({
+        user,
+        stats,
+      });
+    }
   }, [
     user,
     isAuthenticated,
@@ -292,53 +319,89 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     email: string,
     password?: string
   ): Promise<{ ok: boolean; message: string }> => {
-    if (!email.trim() || !email.includes('@')) {
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
       return { ok: false, message: 'Vui lòng nhập địa chỉ email hợp lệ.' };
     }
+    if (!password || password.trim().length === 0) {
+      return { ok: false, message: 'Vui lòng nhập mật khẩu.' };
+    }
 
-    if (isSupabaseConfigured && supabase && password) {
+    if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
+        email: cleanEmail,
         password,
       });
       if (error) {
-        return { ok: false, message: `Lỗi Supabase Auth: ${error.message}` };
+        return { ok: false, message: `Lỗi đăng nhập: ${error.message}` };
       }
       if (data.user) {
         setIsAuthenticated(true);
-        setUser((prev) => ({
-          ...prev,
-          id: data.user!.id,
-          email: data.user!.email || email,
+        const remote = await fetchUserLearningDataFromSupabase(data.user.id);
+        const remoteXP = remote?.profile?.xp || 0;
+        const remoteLevel = Math.max(1, Math.floor(remoteXP / 200) + 1);
+        const loggedUser: User = {
+          id: data.user.id,
+          email: data.user.email || cleanEmail,
           fullName:
-            (data.user!.user_metadata?.full_name as string) ||
-            email.split('@')[0],
+            (data.user.user_metadata?.full_name as string) ||
+            cleanEmail.split('@')[0],
+          level: remoteLevel,
+          xp: remoteXP,
+          streak: remote?.profile?.streak || 1,
+          joinedAt: new Date().toISOString().split('T')[0],
+          targetLevel: (remote?.profile?.targetLevel as any) || 'B1',
+          dailyGoalMinutes: 20,
+        };
+        setUser(loggedUser);
+        setStats((prev) => ({
+          ...prev,
+          totalXP: remoteXP,
+          level: remoteLevel,
+          streak: loggedUser.streak,
         }));
-        notify(`Đăng nhập Supabase thành công: ${email}`);
+        notify(`Chào mừng ${loggedUser.fullName} quay trở lại!`);
         return { ok: true, message: 'Đăng nhập thành công!' };
       }
     }
 
-    // Chế độ Local Emulator khi chưa cấu hình .env
-    const matchedDemo = demoAccounts.find(
-      (acc) => acc.email.toLowerCase() === email.trim().toLowerCase()
-    );
-    const activeUser: User = matchedDemo || {
-      id: `user-${email.trim().toLowerCase()}`,
-      email: email.trim(),
-      fullName: email.split('@')[0],
-      level: 1,
-      xp: 100,
-      streak: 1,
-      joinedAt: new Date().toISOString().split('T')[0],
-      targetLevel: 'B1',
-      dailyGoalMinutes: 20,
-    };
+    // 1. Kiểm tra tài khoản đã đăng ký trong bộ nhớ ứng dụng
+    const matchedAccount = findStoredAccount(cleanEmail);
+    if (matchedAccount) {
+      if (matchedAccount.password && matchedAccount.password !== password) {
+        return { ok: false, message: 'Mật khẩu không chính xác. Vui lòng kiểm tra lại!' };
+      }
+      const accUser = matchedAccount.user;
+      const computedLvl = Math.max(1, Math.floor((accUser.xp || 0) / 200) + 1);
+      const accStats = matchedAccount.stats
+        ? { ...matchedAccount.stats, level: computedLvl, totalXP: accUser.xp }
+        : createDefaultStats(computedLvl, accUser.xp || 0);
 
-    setUser(activeUser);
-    setIsAuthenticated(true);
-    notify(`Đã đăng nhập tài khoản: ${activeUser.fullName} (${activeUser.email})`);
-    return { ok: true, message: 'Đăng nhập thành công!' };
+      setUser({ ...accUser, level: computedLvl });
+      setStats(accStats);
+      setIsAuthenticated(true);
+      notify(`Đăng nhập thành công! Chào mừng ${accUser.fullName} trở lại.`);
+      return { ok: true, message: 'Đăng nhập thành công!' };
+    }
+
+    // 2. Kiểm tra tài khoản mẫu mặc định
+    const matchedDemo = demoAccounts.find(
+      (acc) => acc.email.toLowerCase() === cleanEmail.toLowerCase()
+    );
+    if (matchedDemo) {
+      const demoStats = createDefaultStats(matchedDemo.level, matchedDemo.xp);
+      setUser(matchedDemo);
+      setStats(demoStats);
+      setIsAuthenticated(true);
+      notify(`Đã đăng nhập tài khoản: ${matchedDemo.fullName}`);
+      return { ok: true, message: 'Đăng nhập thành công!' };
+    }
+
+    // 3. NẾU TÀI KHOẢN CHƯA ĐĂNG KÝ -> TỪ CHỐI ĐĂNG NHẬP!
+    return {
+      ok: false,
+      message: 'Tài khoản chưa được đăng ký trong hệ thống. Vui lòng chọn tab "Đăng ký tài khoản" để tạo tài khoản mới!',
+    };
   };
 
   const signUp = async (
@@ -346,57 +409,84 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     password: string,
     fullName: string
   ): Promise<{ ok: boolean; message: string }> => {
-    if (!email.includes('@') || password.length < 6 || !fullName.trim()) {
+    const cleanEmail = email.trim();
+    const cleanName = fullName.trim();
+    if (!cleanEmail.includes('@') || password.length < 6 || !cleanName) {
       return {
         ok: false,
         message: 'Vui lòng nhập đầy đủ Họ tên, Email hợp lệ và mật khẩu từ 6 ký tự trở lên.',
       };
     }
 
+    // Kiểm tra xem email đã được đăng ký hay chưa
+    const existing =
+      findStoredAccount(cleanEmail) ||
+      demoAccounts.find((a) => a.email.toLowerCase() === cleanEmail.toLowerCase());
+    if (existing) {
+      return {
+        ok: false,
+        message: 'Email này đã được sử dụng. Vui lòng đăng nhập hoặc sử dụng email khác.',
+      };
+    }
+
     if (isSupabaseConfigured && supabase) {
       const { data, error } = await supabase.auth.signUp({
-        email: email.trim(),
+        email: cleanEmail,
         password,
         options: {
-          data: { full_name: fullName.trim() },
+          data: { full_name: cleanName },
         },
       });
       if (error) {
-        return { ok: false, message: `Lỗi đăng ký Supabase: ${error.message}` };
+        return { ok: false, message: `Lỗi đăng ký: ${error.message}` };
       }
       if (data.user) {
-        setUser({
+        const newUser: User = {
           id: data.user.id,
-          email: email.trim(),
-          fullName: fullName.trim(),
+          email: cleanEmail,
+          fullName: cleanName,
           level: 1,
           xp: 0,
           streak: 1,
           joinedAt: new Date().toISOString().split('T')[0],
           targetLevel: 'B1',
           dailyGoalMinutes: 20,
-        });
+        };
+        const newStats = createDefaultStats(1, 0);
+        saveStoredAccount({ user: newUser, password, stats: newStats });
+        setUser(newUser);
+        setStats(newStats);
         setIsAuthenticated(true);
-        notify(`Chào mừng học viên mới ${fullName.trim()}!`);
-        return { ok: true, message: 'Đăng ký thành công trên Supabase!' };
+        notify(`Chào mừng học viên mới ${cleanName}! Bạn bắt đầu tại Level 1.`);
+        return { ok: true, message: 'Đăng ký tài khoản thành công! Bạn bắt đầu tại Level 1.' };
       }
     }
 
+    // Tài khoản mới luôn bắt đầu từ Level 1 và 0 XP
     const createdUser: User = {
       id: `user-${Date.now()}`,
-      email: email.trim(),
-      fullName: fullName.trim(),
+      email: cleanEmail,
+      fullName: cleanName,
       level: 1,
-      xp: 50,
+      xp: 0,
       streak: 1,
       joinedAt: new Date().toISOString().split('T')[0],
       targetLevel: 'B1',
       dailyGoalMinutes: 20,
     };
+    const newStats = createDefaultStats(1, 0);
+
+    saveStoredAccount({
+      user: createdUser,
+      password,
+      stats: newStats,
+    });
+
     setUser(createdUser);
+    setStats(newStats);
     setIsAuthenticated(true);
-    notify(`Đăng ký thành công tài khoản ${createdUser.fullName}!`);
-    return { ok: true, message: 'Đăng ký tài khoản thành công!' };
+    notify(`Chào mừng học viên mới ${createdUser.fullName}! Bạn bắt đầu tại Level 1.`);
+    return { ok: true, message: 'Đăng ký tài khoản thành công! Bạn bắt đầu tại Level 1.' };
   };
 
   const signOut = async () => {
@@ -404,7 +494,20 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
       await supabase.auth.signOut();
     }
     setIsAuthenticated(false);
-    notify('Đã đăng xuất khỏi phiên làm việc.');
+    const guestUser: User = {
+      id: 'guest',
+      email: '',
+      fullName: 'Khách',
+      level: 1,
+      xp: 0,
+      streak: 1,
+      joinedAt: new Date().toISOString().split('T')[0],
+      targetLevel: 'B1',
+      dailyGoalMinutes: 20,
+    };
+    setUser(guestUser);
+    setStats(createDefaultStats(1, 0));
+    notify('Đã đăng xuất khỏi tài khoản.');
   };
 
   const switchDemoUser = (userId: string) => {
@@ -418,7 +521,7 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
       level: found.level,
       streak: found.streak,
     }));
-    notify(`Đã chuyển sang tài khoản: ${found.fullName} (${found.email})`);
+    notify(`Đã chuyển sang tài khoản: ${found.fullName}`);
   };
 
   /**
@@ -664,7 +767,7 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     };
     setVocabulary((prev) => [created, ...prev]);
     setStats((prev) => ({ ...prev, vocabularyLearned: prev.vocabularyLearned + 1 }));
-    notify(`Đã thêm từ "${newWord.word}" vào bảng user_vocabulary (SM-2)!`);
+    notify(`Đã thêm từ vựng mới: "${newWord.word}"`);
   };
 
   const toggleFavoriteVocabulary = (vocabId: string) => {
@@ -699,7 +802,7 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     if (draft.status === 'submitted') {
       recordSkillPractice('writing', draft.totalScore || 85, 45, draft.title);
     } else {
-      notify(`Đã lưu bản nháp "${draft.title}" vào writing_submissions lúc ${nowStr}`);
+      notify(`Đã lưu bản nháp "${draft.title}"!`);
     }
 
     return fullDraft;
@@ -722,7 +825,7 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
 
   const updateUserProfile = (patch: Partial<User>) => {
     setUser((prev) => ({ ...prev, ...patch }));
-    notify('Đã cập nhật bảng profiles!');
+    notify('Đã cập nhật thông tin cá nhân!');
   };
 
   const resetDemoState = () => {
@@ -738,7 +841,7 @@ export function LearningProvider({ children }: { children: React.ReactNode }) {
     setXpTransactions(initialXPTransactions);
     setWritingDrafts(initialWritingDrafts);
     setSpeakingAttempts([]);
-    notify('Đã khôi phục dữ liệu mẫu Giai đoạn 3 về trạng thái ban đầu!');
+    notify('Đã đặt lại dữ liệu học tập về trạng thái mặc định!');
   };
 
   return (

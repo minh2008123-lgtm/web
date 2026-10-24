@@ -1,4 +1,4 @@
-import { Bell, Flame, Zap, Brain, Database } from 'lucide-react';
+import { Bell, Flame, Zap, Brain, Menu } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
 import { useLearning } from '../../hooks/useLearning';
 
@@ -17,15 +17,18 @@ const pageTitles: Record<string, string> = {
   '/stats': 'Thống kê tiến bộ',
   '/profile': 'Hồ sơ cá nhân',
   '/settings': 'Cài đặt',
-  '/auth': 'Tài khoản & Supabase (Giai đoạn 3)',
+  '/auth': 'Tài khoản học viên',
 };
 
-export function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
   const location = useLocation();
   const {
     user,
     isAuthenticated,
-    isSupabaseConnected,
     stats,
     dueVocabulary,
     notification,
@@ -35,34 +38,33 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-100">
-      <div className="flex items-center justify-between px-6 py-4">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">{title}</h1>
-          <p className="text-xs text-gray-500">
-            {isAuthenticated
-              ? `Học viên: ${user.fullName} • Mục tiêu CEFR ${user.targetLevel || 'B2'}`
-              : 'Chưa đăng nhập — Nhấn vào nút Tài khoản để đăng nhập'}
-          </p>
+      <div className="flex items-center justify-between px-4 sm:px-6 py-4">
+        <div className="flex items-center gap-3">
+          {onMenuClick && (
+            <button
+              type="button"
+              onClick={onMenuClick}
+              className="lg:hidden p-2 -ml-2 rounded-xl text-gray-700 hover:bg-gray-100 focus:outline-none transition-colors"
+              aria-label="Mở danh mục điều hướng"
+            >
+              <Menu size={22} />
+            </button>
+          )}
+          <div>
+            <h1 className="text-xl font-bold text-gray-900">{title}</h1>
+            <p className="text-xs text-gray-500">
+              {isAuthenticated
+                ? `Học viên: ${user.fullName} • Mục tiêu CEFR ${user.targetLevel || 'B2'}`
+                : 'Chưa đăng nhập — Nhấn vào Tài khoản để đăng nhập'}
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center gap-2.5">
-          {/* Supabase & Auth Link */}
-          <Link
-            to="/auth"
-            className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-              isSupabaseConnected
-                ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
-            }`}
-          >
-            <Database size={14} />
-            <span>{isSupabaseConnected ? 'Supabase Live' : 'Auth & DB'}</span>
-          </Link>
-
           {/* Due SRS Shortcut */}
           <Link
             to="/review"
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-full text-xs font-semibold hover:bg-cyan-100"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-cyan-50 text-cyan-700 rounded-full text-xs font-semibold hover:bg-cyan-100 transition-colors"
           >
             <Brain size={15} />
             <span>SRS: {dueVocabulary.length} từ</span>
@@ -97,10 +99,10 @@ export function Header() {
           {/* Avatar */}
           <Link
             to="/auth"
-            className="w-9 h-9 rounded-full bg-primary-600 text-white font-bold text-sm flex items-center justify-center"
-            title="Quản lý Tài khoản & Đăng nhập"
+            className="w-9 h-9 rounded-full bg-primary-600 text-white font-bold text-sm flex items-center justify-center hover:bg-primary-700 transition-colors"
+            title="Quản lý Tài khoản"
           >
-            {user.fullName.slice(0, 1).toUpperCase()}
+            {user.fullName ? user.fullName.slice(0, 1).toUpperCase() : 'U'}
           </Link>
         </div>
       </div>

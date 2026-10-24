@@ -17,7 +17,11 @@ export const Layout: React.FC = () => {
         Chuyển tới nội dung chính
       </a>
 
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen((prev) => !prev)}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       <div className="flex-1 flex flex-col lg:pl-64 min-w-0">
         {/* Thanh tự động cảnh báo khi mất mạng / có mạng lại */}

@@ -98,13 +98,13 @@ export function Profile() {
         </form>
       </Card>
 
-      <Card className="bg-amber-50 border border-amber-200">
+      <Card className="bg-indigo-50/70 border border-indigo-100">
         <div className="flex items-start gap-3">
-          <Award className="text-amber-600 flex-shrink-0" size={22} />
-          <div className="text-xs text-amber-900">
-            <p className="font-bold text-sm">Trạng thái đồng bộ dữ liệu (Giai đoạn 2)</p>
-            <p className="mt-1">
-              Hiện tại toàn bộ tiến độ bài học, thẻ nhớ SM-2 và bản nháp bài viết được lưu tự động trên trình duyệt (LocalStorage). Trong Giai đoạn 3, tài khoản này sẽ đồng bộ trực tiếp với bảng <code>profiles</code> và <code>lesson_progress</code> trên Supabase PostgreSQL.
+          <Award className="text-primary-600 flex-shrink-0" size={22} />
+          <div className="text-xs text-indigo-900">
+            <p className="font-bold text-sm">Lời khuyên học tập hằng ngày</p>
+            <p className="mt-1 leading-relaxed">
+              Duy trì thời gian luyện tập đều đặn từ 15-30 phút mỗi ngày và hoàn thành các thẻ ôn tập từ vựng đúng hạn để đạt kết quả tốt nhất trên con đường chinh phục chuẩn CEFR!
             </p>
           </div>
         </div>

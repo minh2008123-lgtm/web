@@ -24,6 +24,7 @@ import { useLearning } from '../../hooks/useLearning';
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
+  onClose?: () => void;
 }
 
 const navItems = [
@@ -46,15 +47,20 @@ const practiceItems = [
 ];
 
 const otherItems = [
-  { path: '/auth', icon: Database, label: 'Auth & Supabase DB', color: 'text-emerald-600' },
+  { path: '/auth', icon: UserIcon, label: 'Tài khoản', color: 'text-indigo-600' },
   { path: '/achievements', icon: Trophy, label: 'Thành tích', color: 'text-yellow-600' },
   { path: '/stats', icon: BarChart3, label: 'Thống kê', color: 'text-indigo-600' },
   { path: '/profile', icon: UserIcon, label: 'Hồ sơ', color: 'text-gray-600' },
   { path: '/settings', icon: SettingsIcon, label: 'Cài đặt', color: 'text-gray-600' },
 ];
 
-export function Sidebar({ isOpen, onToggle }: SidebarProps) {
+export function Sidebar({ isOpen, onToggle, onClose }: SidebarProps) {
   const { user, stats, dueVocabulary, isAuthenticated } = useLearning();
+
+  const handleClose = () => {
+    if (onClose) onClose();
+    else onToggle();
+  };
 
   const NavItem = ({
     path,
@@ -72,7 +78,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     <NavLink
       to={path}
       onClick={() => {
-        if (window.innerWidth < 1024) onToggle();
+        if (window.innerWidth < 1024) handleClose();
       }}
       className={({ isActive }) =>
         `flex items-center justify-between px-3 py-2.5 rounded-lg transition-colors ${
@@ -98,8 +104,8 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
-          onClick={onToggle}
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 lg:hidden"
+          onClick={handleClose}
         />
       )}
 
@@ -123,8 +129,9 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
               </div>
             </div>
             <button
-              onClick={onToggle}
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+              onClick={handleClose}
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-500"
+              aria-label="Đóng menu"
             >
               <X size={20} />
             </button>
@@ -170,7 +177,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
             <div>
               <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                Tài khoản & Hệ thống
+                Cá nhân & Cài đặt
               </h3>
               <div className="space-y-1">
                 {otherItems.map((item) => (
@@ -183,7 +190,7 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
           <div className="px-4 py-4 border-t border-gray-100">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-700 font-bold flex items-center justify-center">
-                {user.fullName.slice(0, 1).toUpperCase()}
+                {user.fullName ? user.fullName.slice(0, 1).toUpperCase() : 'U'}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-gray-900 truncate text-sm">
@@ -200,9 +207,10 @@ export function Sidebar({ isOpen, onToggle }: SidebarProps) {
 
       <button
         onClick={onToggle}
-        className="fixed bottom-4 left-4 z-30 lg:hidden w-12 h-12 bg-primary-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary-700 transition-colors"
+        aria-label={isOpen ? 'Đóng menu' : 'Mở menu'}
+        className="fixed bottom-4 left-4 z-40 lg:hidden w-12 h-12 bg-primary-600 text-white rounded-full shadow-xl flex items-center justify-center hover:bg-primary-700 active:scale-95 transition-all"
       >
-        <Menu size={24} />
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
     </>
   );

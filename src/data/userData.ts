@@ -10,58 +10,49 @@ import {
   XPTransaction,
 } from '../types';
 
+export const createDefaultStats = (level = 1, totalXP = 0): UserStats => ({
+  totalXP,
+  level,
+  streak: 1,
+  longestStreak: 1,
+  lessonsCompleted: 0,
+  totalPracticeTime: 0,
+  vocabularyLearned: 0,
+  accuracy: 100,
+  weeklyXP: [0, 0, 0, 0, 0, 0, totalXP],
+  skillsProgress: {
+    listening: 0,
+    speaking: 0,
+    reading: 0,
+    writing: 0,
+    vocabulary: 0,
+  },
+  skillAccuracy: {
+    listening: 100,
+    speaking: 100,
+    reading: 100,
+    writing: 100,
+    vocabulary: 100,
+  },
+});
+
 export const currentUser: User = {
   id: 'user-001',
-  email: 'nguyen.van.a@student.edu.vn',
-  fullName: 'Nguyễn Văn A',
-  level: 12,
-  xp: 2450,
-  streak: 7,
-  joinedAt: '2026-09-01',
-  targetLevel: 'B2',
+  email: 'hocvien@linguaquest.vn',
+  fullName: 'Học viên LinguaQuest',
+  level: 1,
+  xp: 0,
+  streak: 1,
+  joinedAt: '2026-10-24',
+  targetLevel: 'B1',
   dailyGoalMinutes: 20,
 };
 
 export const demoAccounts: User[] = [
   currentUser,
-  {
-    id: 'user-002',
-    email: 'tran.minh.anh@selflearner.vn',
-    fullName: 'Trần Minh Anh',
-    level: 5,
-    xp: 890,
-    streak: 3,
-    joinedAt: '2026-10-10',
-    targetLevel: 'B1',
-    dailyGoalMinutes: 30,
-  },
 ];
 
-export const userStats: UserStats = {
-  totalXP: 2450,
-  level: 12,
-  streak: 7,
-  longestStreak: 14,
-  lessonsCompleted: 28,
-  totalPracticeTime: 420,
-  vocabularyLearned: 156,
-  accuracy: 81,
-  weeklyXP: [120, 180, 90, 210, 150, 200, 280],
-  skillsProgress: {
-    listening: 65,
-    speaking: 42,
-    reading: 78,
-    writing: 55,
-    vocabulary: 82,
-  },
-  skillAccuracy: {
-    listening: 82,
-    speaking: 68,
-    reading: 86,
-    writing: 75,
-    vocabulary: 88,
-  },
-};
+export const userStats: UserStats = createDefaultStats(1, 0);
 
 export const dailyTasks: DailyTask[] = [
   {

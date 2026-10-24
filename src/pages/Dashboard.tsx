@@ -91,7 +91,7 @@ export function Dashboard() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <span className="inline-block px-3 py-0.5 rounded-full text-xs font-medium bg-white/20 mb-2">
-              Giai đoạn 2 • Chức năng học tập tương tác
+              Học tiếng Anh thông minh • Lộ trình CEFR
             </span>
             <h2 className="text-2xl font-bold mb-1">
               Chào mừng trở lại, {user.fullName}! 👋
